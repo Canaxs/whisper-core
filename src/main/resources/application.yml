@@ -1,0 +1,13 @@
+server:
+  servlet:
+    context-path: "/"
+  port: 8080
+
+spring:
+  profiles:
+    active: dev
+  jpa:
+    show-sql: false
+
+jwt:
+  key: "mYiADZOy9Hq5pTfomhj9hPUJLGAN/ZB6AZ4yoHfCtN0f8DaNQr6+4qeaJ9YfMK4ZbX85J3ao6TotW+jrLKLGeafpaYYLn2mmrYOB/1mJzhQYEaf883PtWAIwnTwHpPuEsJAhyHwEtlTvy++pZA+0bns66RUDBk80bJUA4JhJUI8="
