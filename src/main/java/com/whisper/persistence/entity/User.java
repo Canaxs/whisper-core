@@ -29,7 +29,7 @@ public class User implements UserDetails {
     @NotNull
     private String password;
 
-    @Column (nullable = false, columnDefinition = "int default 0")
+    @Column (nullable = false)
     private Integer userPoint;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)

@@ -40,6 +40,7 @@ public class UserService implements UserDetailsService {
                 .username(request.username())
                 .password(passwordEncoder.encode(request.password()))
                 .authorities(request.authorities())
+                .userPoint(0)
                 .accountNonExpired(true)
                 .credentialsNonExpired(true)
                 .isEnabled(true)
@@ -47,6 +48,21 @@ public class UserService implements UserDetailsService {
                 .build();
 
         return userRepository.save(newUser);
+    }
+
+    public User getUser(Long userId) {
+        return userRepository.getReferenceById(userId);
+    }
+    public User deleteUser(Long userId) {
+        User user = new User();
+        try {
+            user = userRepository.getReferenceById(userId);
+            userRepository.delete(user);
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Exception: ");
+        }
+        return user;
     }
 
 

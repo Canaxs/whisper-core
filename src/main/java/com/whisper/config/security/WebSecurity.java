@@ -37,7 +37,8 @@ public class WebSecurity {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(x ->
                         x.requestMatchers(
-                                "/auth/login/**"
+                                "/auth/generateToken/**",
+                                "/user/createUser/**"
                         ).permitAll()
                 ).authorizeHttpRequests(x ->
                         x.requestMatchers("/").authenticated()
