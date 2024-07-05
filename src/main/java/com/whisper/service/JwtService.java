@@ -11,4 +11,6 @@ public interface JwtService {
     String generateToken(String userName);
     Date extractExpiration(String token);
     String createToken(Map<String, Object> claims, String userName);
+
+    String validateExpiration(String token);
 }

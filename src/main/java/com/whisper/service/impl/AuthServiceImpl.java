@@ -21,4 +21,10 @@ public class AuthServiceImpl implements AuthService {
     public String authenticate(UserAuthRequest userAuthRequest, Authentication authentication) {
         return jwtService.generateToken(userAuthRequest.username());
     }
+
+    @Override
+    public String logout(String authorization) {
+        String token = authorization.substring(7);
+        return jwtService.validateExpiration(token);
+    }
 }

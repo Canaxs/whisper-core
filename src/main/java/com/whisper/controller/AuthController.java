@@ -29,7 +29,12 @@ public class AuthController {
         if(authentication.isAuthenticated()) {
             return authService.authenticate(request,authentication);
         }
-        log.info("");
+        log.info("Error: ");
         throw new UsernameNotFoundException("invalid username {} " + request.username());
+    }
+
+    @PostMapping("/logout")
+    public String logout(@RequestHeader(name="Authorization") String authorization) {
+        return authService.logout(authorization);
     }
 }

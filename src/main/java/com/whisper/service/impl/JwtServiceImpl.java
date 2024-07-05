@@ -67,6 +67,12 @@ public class JwtServiceImpl implements JwtService {
                 .compact();
     }
 
+    @Override
+    public String validateExpiration(String token) {
+        Date expirationDate = extractExpiration(token);
+        return null;
+    }
+
     private Key getSignKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(keyBytes);

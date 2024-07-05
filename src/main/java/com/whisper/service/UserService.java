@@ -1,6 +1,7 @@
 package com.whisper.service;
 
 import com.whisper.dto.CreateUserRequest;
+import com.whisper.dto.UserDTO;
 import com.whisper.persistence.entity.User;
 import com.whisper.persistence.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -50,8 +51,19 @@ public class UserService implements UserDetailsService {
         return userRepository.save(newUser);
     }
 
-    public User getUser(Long userId) {
-        return userRepository.getReferenceById(userId);
+    public UserDTO getUser(Long userId) {
+        User user = new User();
+        try {
+            user = userRepository.getReferenceById(userId);
+        }
+        catch (Exception e) {
+            throw new RuntimeException("");
+        }
+        return UserDTO.builder()
+                .username(user.getUsername())
+                .userPoint(user.getUserPoint())
+                .authorities(user.getAuthorities())
+                .build();
     }
     public User deleteUser(Long userId) {
         User user = new User();
@@ -65,5 +77,18 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-
+    public UserDTO getUsername(String username) {
+        User user = new User();
+            if(userRepository.findByUsername(username).isPresent()) {
+                user = userRepository.findByUsername(username).get();
+            }
+            else {
+                throw new RuntimeException("");
+            }
+            return UserDTO.builder()
+                    .username(user.getUsername())
+                    .userPoint(user.getUserPoint())
+                    .authorities(user.getAuthorities())
+                    .build();
+    }
 }

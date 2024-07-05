@@ -41,7 +41,7 @@ public class WebSecurity {
                                 "/user/createUser/**"
                         ).permitAll()
                 ).authorizeHttpRequests(x ->
-                        x.requestMatchers("/").authenticated()
+                        x.requestMatchers("/user/**","/auth/**").authenticated()
                 )
                 .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
