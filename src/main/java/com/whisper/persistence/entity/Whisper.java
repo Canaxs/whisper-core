@@ -7,6 +7,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
@@ -42,4 +47,8 @@ public class Whisper extends BaseEntity {
 
     @OneToOne(mappedBy = "whisper")
     private WhisperView whisperView;
+
+    @OneToMany
+    @JoinTable(name = "whisper_comment_set", joinColumns = @JoinColumn(name = "whisper_id"), inverseJoinColumns = @JoinColumn(name = "whisper_comment_id"))
+    private Set<WhisperComment> whisperComment = new HashSet<>();
 }

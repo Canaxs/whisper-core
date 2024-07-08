@@ -38,10 +38,12 @@ public class WebSecurity {
                 .authorizeHttpRequests(x ->
                         x.requestMatchers(
                                 "/auth/generateToken/**",
-                                "/user/createUser/**"
+                                "/user/createUser/**",
+                                "/user/id/**",
+                                "/user/username/**"
                         ).permitAll()
                 ).authorizeHttpRequests(x ->
-                        x.requestMatchers("/user/**","/auth/**","/whisper/**").authenticated()
+                        x.requestMatchers("/user/**","/auth/**","/whisper/locked/**").authenticated()
                 )
                 .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())

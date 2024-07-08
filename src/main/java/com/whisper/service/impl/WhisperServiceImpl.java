@@ -1,5 +1,6 @@
 package com.whisper.service.impl;
 
+import com.whisper.dto.ViewsUpdateRequest;
 import com.whisper.dto.WhisperRequest;
 import com.whisper.enums.Category;
 import com.whisper.persistence.entity.User;
@@ -12,15 +13,11 @@ import com.whisper.persistence.repository.WhisperRepository;
 import com.whisper.persistence.repository.WhisperViewRepository;
 import com.whisper.service.WhisperService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -121,6 +118,19 @@ public class WhisperServiceImpl implements WhisperService {
             else {
                 return "User already liked";
             }
+        }
+        else {
+            throw new RuntimeException();
+        }
+    }
+
+    @Override
+    public WhisperView viewsUpdate(ViewsUpdateRequest viewsUpdate) {
+        if(whisperViewRepository.existsById(viewsUpdate.whisperId())) {
+            WhisperView whisperView = whisperViewRepository.getReferenceById(viewsUpdate.whisperId());
+            whisperView.setNumberOfViews(viewsUpdate.numberOfViews());
+            whisperViewRepository.save(whisperView);
+            return whisperView;
         }
         else {
             throw new RuntimeException();

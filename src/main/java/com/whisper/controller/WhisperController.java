@@ -1,14 +1,14 @@
 package com.whisper.controller;
 
+import com.whisper.dto.ViewsUpdateRequest;
 import com.whisper.dto.WhisperRequest;
 import com.whisper.persistence.entity.Whisper;
+import com.whisper.persistence.entity.WhisperView;
 import com.whisper.service.WhisperService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/whisper")
@@ -21,7 +21,7 @@ public class WhisperController {
         this.whisperService = whisperService;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/locked/create")
     public ResponseEntity<Whisper> createWhisper(@RequestBody WhisperRequest whisperRequest) {
         return ResponseEntity.ok(whisperService.createWhisper(whisperRequest));
     }
@@ -31,12 +31,12 @@ public class WhisperController {
         return ResponseEntity.ok(whisperService.getWhisper(whisperId));
     }
 
-    @PutMapping("/update")
+    @PutMapping("/locked/update")
     public ResponseEntity<Whisper> updateWhisper(@RequestBody Whisper whisper) {
         return ResponseEntity.ok(whisperService.updateWhisper(whisper));
     }
 
-    @DeleteMapping("/delete/{whisperId}")
+    @DeleteMapping("/locked/delete/{whisperId}")
     public ResponseEntity<String> deleteWhisper(@PathVariable("whisperId") Long whisperId) {
         return ResponseEntity.ok(whisperService.deleteWhisper(whisperId));
     }
@@ -46,8 +46,14 @@ public class WhisperController {
         return ResponseEntity.ok(whisperService.getCategoryWhispers(categoryName, page));
     }
 
-    @GetMapping("/category/like/{whisperId}")
+    @GetMapping("/locked/like/{whisperId}")
     public ResponseEntity<String> likeWhisper(@PathVariable("whisperId") Long whisperId) {
         return ResponseEntity.ok(whisperService.likeWhisper(whisperId));
     }
+
+    @PostMapping("/locked/viewsUpdate")
+    public ResponseEntity<WhisperView> viewsUpdate(@RequestBody ViewsUpdateRequest viewsUpdate) {
+        return ResponseEntity.ok(whisperService.viewsUpdate(viewsUpdate));
+    }
+
 }
