@@ -9,13 +9,15 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WhisperView {
+public class WhisperLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    private Long numberOfViews;
+    private Integer numberLike;
+
+    private Integer numberDislike;
 
     @OneToOne
     @MapsId

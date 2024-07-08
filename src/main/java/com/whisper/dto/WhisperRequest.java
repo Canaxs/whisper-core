@@ -1,5 +1,7 @@
 package com.whisper.dto;
 
+import lombok.Getter;
+
 public record WhisperRequest (
         String authorName,
         String title,
@@ -7,4 +9,4 @@ public record WhisperRequest (
         String source,
         String category,
         String image
-) {}
+) { }

@@ -13,11 +13,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Whisper {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+public class Whisper extends BaseEntity {
 
     @Column(nullable = false)
     private String authorName;
@@ -36,4 +32,14 @@ public class Whisper {
     private Category category;
 
     private String image;
+
+    private Boolean isActive;
+
+    private Boolean isDelete;
+
+    @OneToOne(mappedBy = "whisper")
+    private WhisperLike whisperLike;
+
+    @OneToOne(mappedBy = "whisper")
+    private WhisperView whisperView;
 }
