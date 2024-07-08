@@ -1,7 +1,9 @@
 package com.whisper.persistence.repository;
 
+import com.whisper.persistence.entity.User;
 import com.whisper.persistence.entity.WhisperLike;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository

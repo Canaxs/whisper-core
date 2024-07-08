@@ -3,6 +3,9 @@ package com.whisper.persistence.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
@@ -22,4 +25,8 @@ public class WhisperLike {
     @OneToOne
     @MapsId
     private Whisper whisper;
+
+    @ManyToMany
+    @JoinTable(name = "whisper_like_user",joinColumns = @JoinColumn(name = "whisper_like_id") , inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> users = new HashSet<>();
 }

@@ -45,4 +45,9 @@ public class WhisperController {
     public ResponseEntity<Page<Whisper>> getCategoryWhispers(@PathVariable("categoryName") String categoryName, Pageable page) {
         return ResponseEntity.ok(whisperService.getCategoryWhispers(categoryName, page));
     }
+
+    @GetMapping("/category/like/{whisperId}")
+    public ResponseEntity<String> likeWhisper(@PathVariable("whisperId") Long whisperId) {
+        return ResponseEntity.ok(whisperService.likeWhisper(whisperId));
+    }
 }

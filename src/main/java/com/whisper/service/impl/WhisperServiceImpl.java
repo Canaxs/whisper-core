@@ -2,13 +2,16 @@ package com.whisper.service.impl;
 
 import com.whisper.dto.WhisperRequest;
 import com.whisper.enums.Category;
+import com.whisper.persistence.entity.User;
 import com.whisper.persistence.entity.Whisper;
 import com.whisper.persistence.entity.WhisperLike;
 import com.whisper.persistence.entity.WhisperView;
+import com.whisper.persistence.repository.UserRepository;
 import com.whisper.persistence.repository.WhisperLikeRepository;
 import com.whisper.persistence.repository.WhisperRepository;
 import com.whisper.persistence.repository.WhisperViewRepository;
 import com.whisper.service.WhisperService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,19 +22,23 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Service
+@Slf4j
 public class WhisperServiceImpl implements WhisperService {
 
     private final WhisperRepository whisperRepository;
     private final WhisperLikeRepository whisperLikeRepository;
     private final WhisperViewRepository whisperViewRepository;
+    private final UserRepository userRepository;
 
 
-    public WhisperServiceImpl(WhisperRepository whisperRepository, WhisperLikeRepository whisperLikeRepository, WhisperViewRepository whisperViewRepository) {
+    public WhisperServiceImpl(WhisperRepository whisperRepository, WhisperLikeRepository whisperLikeRepository, WhisperViewRepository whisperViewRepository, UserRepository userRepository) {
         this.whisperRepository = whisperRepository;
         this.whisperLikeRepository = whisperLikeRepository;
         this.whisperViewRepository = whisperViewRepository;
+        this.userRepository = userRepository;
     }
 
 
@@ -95,5 +102,28 @@ public class WhisperServiceImpl implements WhisperService {
     @Override
     public Page<Whisper> getCategoryWhispers(String categoryName, Pageable page) {
         return whisperRepository.findByCategory(Category.convert(categoryName) , page);
+    }
+
+    @Override
+    public String likeWhisper(Long whisperId) {
+        if(whisperLikeRepository.existsById(whisperId)) {
+            WhisperLike whisperLike = whisperLikeRepository.getReferenceById(whisperId);
+            String securityName = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userRepository.findByUsername(securityName).get();
+            if(!whisperLike.getUsers().contains(user)) {
+                Set<User> users = whisperLike.getUsers();
+                users.add(user);
+                whisperLike.setUsers(users);
+                whisperLike.setNumberLike(whisperLike.getNumberLike()+1);
+                whisperLikeRepository.save(whisperLike);
+                return "Successfully liked";
+            }
+            else {
+                return "User already liked";
+            }
+        }
+        else {
+            throw new RuntimeException();
+        }
     }
 }

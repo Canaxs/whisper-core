@@ -13,6 +13,7 @@ public interface WhisperService {
     Whisper getWhisper(Long whisperId);
     Whisper updateWhisper(Whisper whisper);
     String deleteWhisper(Long whisperId);
-
     Page<Whisper> getCategoryWhispers(String categoryName, Pageable page);
+
+    String likeWhisper(Long whisperId);
 }
