@@ -1,8 +1,11 @@
 package com.whisper.controller;
 
+import com.whisper.dto.CommentDTO;
+import com.whisper.dto.CommentDeleteRequest;
 import com.whisper.dto.ViewsUpdateRequest;
 import com.whisper.dto.WhisperRequest;
 import com.whisper.persistence.entity.Whisper;
+import com.whisper.persistence.entity.WhisperComment;
 import com.whisper.persistence.entity.WhisperView;
 import com.whisper.service.WhisperService;
 import org.springframework.data.domain.Page;
@@ -54,6 +57,16 @@ public class WhisperController {
     @PostMapping("/locked/viewsUpdate")
     public ResponseEntity<WhisperView> viewsUpdate(@RequestBody ViewsUpdateRequest viewsUpdate) {
         return ResponseEntity.ok(whisperService.viewsUpdate(viewsUpdate));
+    }
+
+    @PostMapping("/locked/comment/create")
+    public ResponseEntity<WhisperComment> commentCreate(@RequestBody CommentDTO commentDTO) {
+        return ResponseEntity.ok(whisperService.commentCreate(commentDTO));
+    }
+
+    @DeleteMapping("/locked/comment/delete")
+    public ResponseEntity<Boolean> commentDelete(@RequestBody CommentDeleteRequest commentDeleteRequest) {
+        return ResponseEntity.ok(whisperService.commentDelete(commentDeleteRequest));
     }
 
 }

@@ -12,8 +12,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@Data
-@EqualsAndHashCode(callSuper = false)
+@Getter
+@Setter
 @Entity
 @Builder
 @NoArgsConstructor

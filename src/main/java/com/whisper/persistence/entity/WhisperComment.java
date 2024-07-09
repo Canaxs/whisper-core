@@ -3,8 +3,8 @@ package com.whisper.persistence.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Data
-@EqualsAndHashCode(callSuper = false)
+@Getter
+@Setter
 @Entity
 @Builder
 @NoArgsConstructor

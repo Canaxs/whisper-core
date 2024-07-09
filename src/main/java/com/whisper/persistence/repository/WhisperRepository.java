@@ -1,6 +1,7 @@
 package com.whisper.persistence.repository;
 
 import com.whisper.enums.Category;
+import com.whisper.persistence.entity.User;
 import com.whisper.persistence.entity.Whisper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

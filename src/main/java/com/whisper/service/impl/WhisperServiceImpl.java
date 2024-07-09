@@ -1,16 +1,12 @@
 package com.whisper.service.impl;
 
+import com.whisper.dto.CommentDTO;
+import com.whisper.dto.CommentDeleteRequest;
 import com.whisper.dto.ViewsUpdateRequest;
 import com.whisper.dto.WhisperRequest;
 import com.whisper.enums.Category;
-import com.whisper.persistence.entity.User;
-import com.whisper.persistence.entity.Whisper;
-import com.whisper.persistence.entity.WhisperLike;
-import com.whisper.persistence.entity.WhisperView;
-import com.whisper.persistence.repository.UserRepository;
-import com.whisper.persistence.repository.WhisperLikeRepository;
-import com.whisper.persistence.repository.WhisperRepository;
-import com.whisper.persistence.repository.WhisperViewRepository;
+import com.whisper.persistence.entity.*;
+import com.whisper.persistence.repository.*;
 import com.whisper.service.WhisperService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -19,7 +15,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
-import java.util.Set;
 
 @Service
 @Slf4j
@@ -29,13 +24,15 @@ public class WhisperServiceImpl implements WhisperService {
     private final WhisperLikeRepository whisperLikeRepository;
     private final WhisperViewRepository whisperViewRepository;
     private final UserRepository userRepository;
+    private final WhisperCommentRepository whisperCommentRepository;
 
 
-    public WhisperServiceImpl(WhisperRepository whisperRepository, WhisperLikeRepository whisperLikeRepository, WhisperViewRepository whisperViewRepository, UserRepository userRepository) {
+    public WhisperServiceImpl(WhisperRepository whisperRepository, WhisperLikeRepository whisperLikeRepository, WhisperViewRepository whisperViewRepository, UserRepository userRepository, WhisperCommentRepository whisperCommentRepository) {
         this.whisperRepository = whisperRepository;
         this.whisperLikeRepository = whisperLikeRepository;
         this.whisperViewRepository = whisperViewRepository;
         this.userRepository = userRepository;
+        this.whisperCommentRepository = whisperCommentRepository;
     }
 
 
@@ -108,9 +105,7 @@ public class WhisperServiceImpl implements WhisperService {
             String securityName = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userRepository.findByUsername(securityName).get();
             if(!whisperLike.getUsers().contains(user)) {
-                Set<User> users = whisperLike.getUsers();
-                users.add(user);
-                whisperLike.setUsers(users);
+                whisperLike.getUsers().add(user);
                 whisperLike.setNumberLike(whisperLike.getNumberLike()+1);
                 whisperLikeRepository.save(whisperLike);
                 return "Successfully liked";
@@ -135,5 +130,36 @@ public class WhisperServiceImpl implements WhisperService {
         else {
             throw new RuntimeException();
         }
+    }
+
+    @Override
+    public WhisperComment commentCreate(CommentDTO commentDTO) {
+        if(whisperRepository.existsById(commentDTO.whisperId())) {
+            Whisper whisper = whisperRepository.findById(commentDTO.whisperId()).get();
+            String name = SecurityContextHolder.getContext().getAuthentication().getName();
+            WhisperComment whisperComment = new WhisperComment();
+            whisperComment.setComment(commentDTO.comment());
+            whisperComment.setWhisper(whisper);
+            whisperComment.setUser(userRepository.findByUsername(name).get());
+            whisperCommentRepository.save(whisperComment);
+            whisper.getWhisperComment().add(whisperComment);
+            whisperRepository.save(whisper);
+        }
+        else {
+            throw new RuntimeException();
+        }
+        return null;
+    }
+
+    @Override
+    public Boolean commentDelete(CommentDeleteRequest commentDeleteRequest) {
+        if(whisperCommentRepository.existsById(commentDeleteRequest.commentId())) {
+            WhisperComment whisperComment = whisperCommentRepository.findById(commentDeleteRequest.commentId()).get();
+            whisperCommentRepository.delete(whisperComment);
+            Whisper whisper = whisperRepository.findById(commentDeleteRequest.whisperId()).get();
+            whisper.getWhisperComment().remove(whisperComment);
+            return true;
+        }
+        return false;
     }
 }
