@@ -1,9 +1,6 @@
 package com.whisper.controller;
 
-import com.whisper.dto.CommentDTO;
-import com.whisper.dto.CommentDeleteRequest;
-import com.whisper.dto.ViewsUpdateRequest;
-import com.whisper.dto.WhisperRequest;
+import com.whisper.dto.*;
 import com.whisper.persistence.entity.Whisper;
 import com.whisper.persistence.entity.WhisperComment;
 import com.whisper.persistence.entity.WhisperView;
@@ -13,9 +10,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/whisper")
-@CrossOrigin
+@CrossOrigin(origins = "*")
 public class WhisperController {
 
     private final WhisperService whisperService;
@@ -67,6 +66,26 @@ public class WhisperController {
     @DeleteMapping("/locked/comment/delete")
     public ResponseEntity<Boolean> commentDelete(@RequestBody CommentDeleteRequest commentDeleteRequest) {
         return ResponseEntity.ok(whisperService.commentDelete(commentDeleteRequest));
+    }
+
+    @GetMapping("/categoryNames")
+    public ResponseEntity<List<String>> getCategoryNames() {
+        return ResponseEntity.ok(whisperService.getCategoryName());
+    }
+
+    @GetMapping("/getUrlName/{urlName}")
+    public ResponseEntity<WhisperDTO> getUrlNameWhisper(@PathVariable("urlName") String urlName) {
+        return ResponseEntity.ok(whisperService.getUrlNameWhisper(urlName));
+    }
+
+    @GetMapping("/getWhispers")
+    public ResponseEntity<List<WhisperPanelDTO>> getWhispers() {
+        return ResponseEntity.ok(whisperService.getWhispers());
+    }
+
+    @GetMapping("/getPendingWhispers")
+    public ResponseEntity<List<WhisperPanelDTO>> getPendingWhispers() {
+        return ResponseEntity.ok(whisperService.getPendingWhispers());
     }
 
 }

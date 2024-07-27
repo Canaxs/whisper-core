@@ -1,9 +1,6 @@
 package com.whisper.service.impl;
 
-import com.whisper.dto.CommentDTO;
-import com.whisper.dto.CommentDeleteRequest;
-import com.whisper.dto.ViewsUpdateRequest;
-import com.whisper.dto.WhisperRequest;
+import com.whisper.dto.*;
 import com.whisper.enums.Category;
 import com.whisper.persistence.entity.*;
 import com.whisper.persistence.repository.*;
@@ -14,7 +11,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.text.Normalizer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 @Service
 @Slf4j
@@ -39,7 +41,7 @@ public class WhisperServiceImpl implements WhisperService {
     @Override
     public Whisper createWhisper(WhisperRequest whisperRequest) {
         Whisper whisper = Whisper.builder()
-                .authorName(whisperRequest.authorName())
+                .authorName(SecurityContextHolder.getContext().getAuthentication().getName())
                 .title(whisperRequest.title())
                 .image(whisperRequest.image())
                 .description(whisperRequest.description())
@@ -48,6 +50,7 @@ public class WhisperServiceImpl implements WhisperService {
                 .isDelete(false)
                 .category(Category.convert(whisperRequest.category().toUpperCase()))
                 .build();
+        whisper.setUrlName(createUrlName(whisper.getTitle()));
         try {
             WhisperLike whisperLike = new WhisperLike();
             whisperLike.setNumberLike(0);
@@ -161,5 +164,73 @@ public class WhisperServiceImpl implements WhisperService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<String> getCategoryName() {
+        List<String> strings = new ArrayList<>();
+        for (Category category : Category.values()) {
+            strings.add(Category.convertTR(category));
+        }
+        return strings;
+    }
+
+    @Override
+    public String createUrlName(String title) {
+        StringBuilder createUrlName = new StringBuilder();
+        title = title.toLowerCase();
+        title = turkishToEnglish(title);
+        String[] titleList = title.split(" ");
+
+        for(String word : titleList) {
+            createUrlName.append(word);
+            createUrlName.append("-");
+        }
+        createUrlName.append(whisperRepository.getByIdNumber()+1);
+
+        return createUrlName.toString();
+    }
+
+    @Override
+    public WhisperDTO getUrlNameWhisper(String urlName) {
+        Whisper whisper = whisperRepository.findByUrlName(urlName);
+        if(!whisper.getIsActive()) {
+            //throw new RuntimeException();
+        }
+        return WhisperDTO.builder()
+                .authorName(whisper.getAuthorName())
+                .title(whisper.getTitle())
+                .source(whisper.getSource())
+                .image(whisper.getImage())
+                .category(Category.convertTR(whisper.getCategory()))
+                .createdDate(whisper.getCreatedDate())
+                .build();
+
+    }
+
+    @Override
+    public List<WhisperPanelDTO> getWhispers() {
+        return whisperRepository.getAllByWhispers();
+    }
+
+    @Override
+    public List<WhisperPanelDTO> getPendingWhispers() {
+        return whisperRepository.getAllByPendingWhispers();
+    }
+
+    private String turkishToEnglish(String title) {
+        return title.replace('Ğ','g')
+                .replace('Ü','u')
+                .replace('Ş','s')
+                .replace('I','i')
+                .replace('İ','i')
+                .replace('Ö','o')
+                .replace('Ç','c')
+                .replace('ğ','g')
+                .replace('ü','u')
+                .replace('ş','s')
+                .replace('ı','i')
+                .replace('ö','o')
+                .replace('ç','c');
     }
 }

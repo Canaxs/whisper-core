@@ -1,5 +1,8 @@
 package com.whisper.enums;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum Category {
     SPORT,
     TECHNOLOGY,
@@ -18,6 +21,18 @@ public enum Category {
             case "AGENDA" -> Category.AGENDA;
             case "WORLD" -> Category.WORLD;
             case "MAGAZINE" -> Category.MAGAZINE;
+            default -> null;
+        };
+    }
+    public static String convertTR(Category step) {
+        return switch (step) {
+            case SPORT -> "Spor";
+            case TECHNOLOGY -> "Teknoloji";
+            case POLITICS -> "Politika";
+            case FINANCE -> "Finans";
+            case AGENDA -> "Gündem";
+            case WORLD -> "Dünya";
+            case MAGAZINE -> "Magazin";
             default -> null;
         };
     }

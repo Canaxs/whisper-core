@@ -36,6 +36,9 @@ public class Whisper extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Category category;
 
+    @Column(unique = true)
+    private String urlName;
+
     private String image;
 
     private Boolean isActive;

@@ -1,5 +1,6 @@
 package com.whisper.controller;
 
+import com.whisper.dto.TokenDTO;
 import com.whisper.dto.UserAuthRequest;
 import com.whisper.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
@@ -11,20 +12,20 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin
+@CrossOrigin(origins = "*")
 @Slf4j
 public class AuthController {
 
     private final AuthService authService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthController(AuthService authService, AuthenticationManager authenticationManager) {
+    public AuthController(AuthService  authService, AuthenticationManager authenticationManager) {
         this.authService = authService;
         this.authenticationManager = authenticationManager;
     }
 
     @PostMapping("/generateToken")
-    public String generateToken(@RequestBody UserAuthRequest request) {
+    public TokenDTO generateToken(@RequestBody UserAuthRequest request) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.username(), request.password()));
         if(authentication.isAuthenticated()) {
             return authService.authenticate(request,authentication);
@@ -36,5 +37,10 @@ public class AuthController {
     @PostMapping("/logout")
     public String logout(@RequestHeader(name="Authorization") String authorization) {
         return authService.logout(authorization);
+    }
+
+    @GetMapping("/isExpiredToken")
+    public Boolean isExpiredToken(@RequestHeader(name="Authorization") String authorization) {
+        return authService.isExpiredToken(authorization);
     }
 }

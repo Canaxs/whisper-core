@@ -1,5 +1,6 @@
 package com.whisper.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,5 +20,6 @@ public class WhisperView {
 
     @OneToOne
     @MapsId
+    @JsonIgnore
     private Whisper whisper;
 }

@@ -38,9 +38,15 @@ public class WebSecurity {
                 .authorizeHttpRequests(x ->
                         x.requestMatchers(
                                 "/auth/generateToken/**",
+                                "/auth/expiredToken/**",
+                                "/whisper/getUrlName/**",
+                                "/whisper/category/**",
+                                "/whisper/getWhispers/**",
+                                "/whisper/getPendingWhispers/**",
                                 "/user/createUser/**",
                                 "/user/id/**",
-                                "/user/username/**"
+                                "/user/username/**",
+                                "/user/getUsers/**"
                         ).permitAll()
                 ).authorizeHttpRequests(x ->
                         x.requestMatchers("/user/**","/auth/**","/whisper/locked/**").authenticated()

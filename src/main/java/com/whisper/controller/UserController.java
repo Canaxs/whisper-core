@@ -7,9 +7,11 @@ import com.whisper.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/user")
-@CrossOrigin
+@CrossOrigin(origins = "*")
 public class UserController {
 
     private final UserService userService;
@@ -32,5 +34,10 @@ public class UserController {
     @DeleteMapping("/delete/{userId}")
     public ResponseEntity<User> deleteUser(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok(userService.deleteUser(userId));
+    }
+
+    @GetMapping("/getUsers")
+    public ResponseEntity<List<User>> getUsers() {
+        return ResponseEntity.ok(userService.getUsers());
     }
 }

@@ -1,5 +1,6 @@
 package com.whisper.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,6 +25,7 @@ public class WhisperLike {
 
     @OneToOne
     @MapsId
+    @JsonIgnore
     private Whisper whisper;
 
     @ManyToMany
