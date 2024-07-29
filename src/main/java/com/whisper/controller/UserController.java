@@ -2,6 +2,7 @@ package com.whisper.controller;
 
 import com.whisper.dto.CreateUserRequest;
 import com.whisper.dto.UserDTO;
+import com.whisper.dto.UsersDTO;
 import com.whisper.persistence.entity.User;
 import com.whisper.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ public class UserController {
     }
 
     @GetMapping("/getUsers")
-    public ResponseEntity<List<User>> getUsers() {
+    public ResponseEntity<List<UsersDTO>> getUsers() {
         return ResponseEntity.ok(userService.getUsers());
     }
 }

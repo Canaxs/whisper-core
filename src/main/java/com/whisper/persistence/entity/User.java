@@ -1,5 +1,6 @@
 package com.whisper.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.whisper.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

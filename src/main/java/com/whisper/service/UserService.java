@@ -2,6 +2,7 @@ package com.whisper.service;
 
 import com.whisper.dto.CreateUserRequest;
 import com.whisper.dto.UserDTO;
+import com.whisper.dto.UsersDTO;
 import com.whisper.persistence.entity.User;
 import com.whisper.persistence.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -93,7 +94,7 @@ public class UserService implements UserDetailsService {
                     .build();
     }
 
-    public List<User> getUsers() {
-        return userRepository.findAll();
+    public List<UsersDTO> getUsers() {
+        return userRepository.findAllByUser();
     }
 }
