@@ -202,7 +202,7 @@ public class WhisperServiceImpl implements WhisperService {
                 .title(whisper.getTitle())
                 .source(whisper.getSource())
                 .image(whisper.getImage())
-                .category(Category.convertTR(whisper.getCategory()))
+                .category(whisper.getCategory())
                 .createdDate(whisper.getCreatedDate())
                 .build();
 
@@ -216,6 +216,11 @@ public class WhisperServiceImpl implements WhisperService {
     @Override
     public List<WhisperPanelDTO> getPendingWhispers() {
         return whisperRepository.getAllByPendingWhispers();
+    }
+
+    @Override
+    public List<WhisperDTO> getBestUserPoint() {
+        return whisperRepository.getBestUserPoint();
     }
 
     private String turkishToEnglish(String title) {

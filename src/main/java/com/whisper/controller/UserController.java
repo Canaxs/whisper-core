@@ -1,6 +1,7 @@
 package com.whisper.controller;
 
 import com.whisper.dto.CreateUserRequest;
+import com.whisper.dto.RoleDTO;
 import com.whisper.dto.UserDTO;
 import com.whisper.dto.UsersDTO;
 import com.whisper.persistence.entity.User;
@@ -38,7 +39,17 @@ public class UserController {
     }
 
     @GetMapping("/getUsers")
-    public ResponseEntity<List<UsersDTO>> getUsers() {
+    public ResponseEntity<List<User>> getUsers() {
         return ResponseEntity.ok(userService.getUsers());
+    }
+
+    @GetMapping("/getMods")
+    public ResponseEntity<List<User>> getMods() {
+        return ResponseEntity.ok(userService.getMods());
+    }
+
+    @PutMapping("/updateRole")
+    public ResponseEntity<User> updateRole(@RequestBody RoleDTO roleDTO) {
+        return ResponseEntity.ok(userService.updateAuthorities(roleDTO.getUserId(), roleDTO.getRole()));
     }
 }

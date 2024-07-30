@@ -1,5 +1,6 @@
 package com.whisper.persistence.repository;
 
+import com.whisper.dto.WhisperDTO;
 import com.whisper.dto.WhisperPanelDTO;
 import com.whisper.enums.Category;
 import com.whisper.persistence.entity.User;
@@ -42,6 +43,19 @@ public interface WhisperRepository extends JpaRepository<Whisper, Long> {
             + "w.category )"
             + " FROM Whisper w ORDER BY w.Id DESC")
     List<WhisperPanelDTO> getAllByWhispers();
+
+    @Query("SELECT "
+            + " new com.whisper.dto.WhisperDTO("
+            + " w.authorName,"
+            + " w.title,"
+            + " w.description,"
+            + " w.source,"
+            + " w.category,"
+            + " w.urlName,"
+            + " w.image,"
+            + " w.createdDate)"
+            + " FROM Whisper w ORDER BY w.whisperLike.numberLike DESC LIMIT 24")
+    List<WhisperDTO> getBestUserPoint();
 
     Whisper findByUrlName(String urlName);
 }

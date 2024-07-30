@@ -39,9 +39,13 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<Role> authorities;
 
+    @JsonIgnore
     private boolean accountNonExpired;
+    @JsonIgnore
     private boolean isEnabled;
+    @JsonIgnore
     private boolean accountNonLocked;
+    @JsonIgnore
     private boolean credentialsNonExpired;
 
 }

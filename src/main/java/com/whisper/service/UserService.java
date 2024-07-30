@@ -3,6 +3,7 @@ package com.whisper.service;
 import com.whisper.dto.CreateUserRequest;
 import com.whisper.dto.UserDTO;
 import com.whisper.dto.UsersDTO;
+import com.whisper.enums.Role;
 import com.whisper.persistence.entity.User;
 import com.whisper.persistence.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -12,8 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -94,7 +94,25 @@ public class UserService implements UserDetailsService {
                     .build();
     }
 
-    public List<UsersDTO> getUsers() {
-        return userRepository.findAllByUser();
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
+
+    public List<User> getMods() {
+        Set<Role> roles = new HashSet<>();
+        roles.add(Role.ROLE_MOD);
+        return userRepository.findByAuthoritiesIn(roles);
+    }
+
+    public User updateAuthorities(Long userId, String role) {
+        User user = userRepository.getReferenceById(userId);
+        Set<Role> roles = user.getAuthorities();
+        if(role.equalsIgnoreCase("MOD")) {
+            roles.add(Role.ROLE_MOD);
+        }
+        else if (role.equalsIgnoreCase("ADMIN")) {
+            roles.add(Role.ROLE_ADMIN);
+        }
+        return userRepository.save(user);
     }
 }

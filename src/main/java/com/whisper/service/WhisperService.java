@@ -33,4 +33,6 @@ public interface WhisperService {
     List<WhisperPanelDTO> getWhispers();
 
     List<WhisperPanelDTO> getPendingWhispers();
+
+    List<WhisperDTO> getBestUserPoint();
 }

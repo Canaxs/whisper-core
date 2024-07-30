@@ -88,4 +88,9 @@ public class WhisperController {
         return ResponseEntity.ok(whisperService.getPendingWhispers());
     }
 
+    @GetMapping("/getBestUserPoint")
+    public ResponseEntity<List<WhisperDTO>> getBestUserPoint() {
+        return ResponseEntity.ok(whisperService.getBestUserPoint());
+    }
+
 }

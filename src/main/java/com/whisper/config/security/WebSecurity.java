@@ -46,7 +46,9 @@ public class WebSecurity {
                                 "/user/createUser/**",
                                 "/user/id/**",
                                 "/user/username/**",
-                                "/user/getUsers/**"
+                                "/user/getUsers/**",
+                                "/user/getMods/**",
+                                "/whisper/getBestUserPoint/**"
                         ).permitAll()
                 ).authorizeHttpRequests(x ->
                         x.requestMatchers("/user/**","/auth/**","/whisper/locked/**").authenticated()
