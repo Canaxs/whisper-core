@@ -186,23 +186,28 @@ public class WhisperServiceImpl implements WhisperService {
             createUrlName.append(word);
             createUrlName.append("-");
         }
-        createUrlName.append(whisperRepository.getByIdNumber()+1);
+        Long id = whisperRepository.getByIdNumber();
+        if(id == null) {
+            id = 0L;
+        }
+        createUrlName.append(id+1);
 
         return createUrlName.toString();
     }
 
     @Override
-    public WhisperDTO getUrlNameWhisper(String urlName) {
+    public UrlWhisperDTO getUrlNameWhisper(String urlName) {
         Whisper whisper = whisperRepository.findByUrlName(urlName);
         if(!whisper.getIsActive()) {
             //throw new RuntimeException();
         }
-        return WhisperDTO.builder()
+        return UrlWhisperDTO.builder()
                 .authorName(whisper.getAuthorName())
                 .title(whisper.getTitle())
+                .description(whisper.getDescription())
                 .source(whisper.getSource())
                 .image(whisper.getImage())
-                .category(whisper.getCategory())
+                .category(Category.convertTR(whisper.getCategory()))
                 .createdDate(whisper.getCreatedDate())
                 .build();
 

@@ -74,7 +74,7 @@ public class WhisperController {
     }
 
     @GetMapping("/getUrlName/{urlName}")
-    public ResponseEntity<WhisperDTO> getUrlNameWhisper(@PathVariable("urlName") String urlName) {
+    public ResponseEntity<UrlWhisperDTO> getUrlNameWhisper(@PathVariable("urlName") String urlName) {
         return ResponseEntity.ok(whisperService.getUrlNameWhisper(urlName));
     }
 

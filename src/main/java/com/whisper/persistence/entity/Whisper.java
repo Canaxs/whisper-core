@@ -26,8 +26,7 @@ public class Whisper extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    @Lob
-    @Column(nullable = false)
+    @Column(nullable = false , columnDefinition = "text")
     private String description;
 
     @Column(nullable = false)

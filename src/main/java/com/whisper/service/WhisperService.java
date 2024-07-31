@@ -28,7 +28,7 @@ public interface WhisperService {
 
     String createUrlName(String title);
 
-    WhisperDTO getUrlNameWhisper(String urlName);
+    UrlWhisperDTO getUrlNameWhisper(String urlName);
 
     List<WhisperPanelDTO> getWhispers();
 
