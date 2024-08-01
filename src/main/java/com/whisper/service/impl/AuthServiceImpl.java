@@ -44,8 +44,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Boolean isExpiredToken(String token) {
-        token = token.substring(7);
-        Date expirationDate = jwtService.extractExpiration(token);
+        Date expirationDate;
+        try {
+            expirationDate = jwtService.extractExpiration(token);
+        }
+        catch (Exception e) {
+            return true;
+        }
         return expirationDate.before(new Date());
     }
 }

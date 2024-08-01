@@ -178,6 +178,7 @@ public class WhisperServiceImpl implements WhisperService {
     @Override
     public String createUrlName(String title) {
         StringBuilder createUrlName = new StringBuilder();
+        title = title.replaceAll("\\p{Punct}", "");
         title = title.toLowerCase();
         title = turkishToEnglish(title);
         String[] titleList = title.split(" ");
@@ -226,6 +227,21 @@ public class WhisperServiceImpl implements WhisperService {
     @Override
     public List<WhisperDTO> getBestUserPoint() {
         return whisperRepository.getBestUserPoint();
+    }
+
+    @Override
+    public List<WhisperDTO> getUserWhispers(String username) {
+        return whisperRepository.getUserWhispers(username);
+    }
+
+    @Override
+    public List<WhisperDTO> getCarouselBig() {
+        return whisperRepository.getCarouselBig();
+    }
+
+    @Override
+    public List<WhisperDTO> getCarouselSmall() {
+        return whisperRepository.getCarouselSmall();
     }
 
     private String turkishToEnglish(String title) {

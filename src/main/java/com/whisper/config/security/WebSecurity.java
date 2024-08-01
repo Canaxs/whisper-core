@@ -38,7 +38,7 @@ public class WebSecurity {
                 .authorizeHttpRequests(x ->
                         x.requestMatchers(
                                 "/auth/generateToken/**",
-                                "/auth/expiredToken/**",
+                                "/auth/isExpiredToken",
                                 "/whisper/getUrlName/**",
                                 "/whisper/category/**",
                                 "/whisper/getWhispers/**",
@@ -48,10 +48,13 @@ public class WebSecurity {
                                 "/user/username/**",
                                 "/user/getUsers/**",
                                 "/user/getMods/**",
-                                "/whisper/getBestUserPoint/**"
+                                "/whisper/getBestUserPoint/**",
+                                "/whisper/getUserWhispers/**",
+                                "/whisper/carousel/big/**",
+                                "/whisper/carousel/small/**"
                         ).permitAll()
                 ).authorizeHttpRequests(x ->
-                        x.requestMatchers("/user/**","/auth/**","/whisper/locked/**").authenticated()
+                        x.requestMatchers("/user/**","/auth/logout/**","/whisper/locked/**").authenticated()
                 )
                 .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())

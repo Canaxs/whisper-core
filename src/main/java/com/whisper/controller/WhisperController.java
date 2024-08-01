@@ -93,4 +93,19 @@ public class WhisperController {
         return ResponseEntity.ok(whisperService.getBestUserPoint());
     }
 
+    @GetMapping("/getUserWhispers/{username}")
+    public ResponseEntity<List<WhisperDTO>> getUserWhispers(@PathVariable("username") String username) {
+        return ResponseEntity.ok(whisperService.getUserWhispers(username));
+    }
+
+    @GetMapping("/carousel/big")
+    public ResponseEntity<List<WhisperDTO>> getCarouselBig() {
+        return ResponseEntity.ok(whisperService.getCarouselBig());
+    }
+
+    @GetMapping("/carousel/small")
+    public ResponseEntity<List<WhisperDTO>> getCarouselSmall() {
+        return ResponseEntity.ok(whisperService.getCarouselSmall());
+    }
+
 }

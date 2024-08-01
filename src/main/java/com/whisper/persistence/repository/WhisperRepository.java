@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -56,6 +57,47 @@ public interface WhisperRepository extends JpaRepository<Whisper, Long> {
             + " w.createdDate)"
             + " FROM Whisper w ORDER BY w.whisperLike.numberLike DESC LIMIT 24")
     List<WhisperDTO> getBestUserPoint();
+
+    @Query("SELECT "
+            + " new com.whisper.dto.WhisperDTO("
+            + " w.authorName,"
+            + " w.title,"
+            + " w.description,"
+            + " w.source,"
+            + " w.category,"
+            + " w.urlName,"
+            + " w.image,"
+            + " w.createdDate)"
+            + " FROM Whisper w WHERE w.authorName = :username")
+    List<WhisperDTO> getUserWhispers(@Param("username") String username);
+
+
+    @Query("SELECT "
+            + " new com.whisper.dto.WhisperDTO("
+            + " w.authorName,"
+            + " w.title,"
+            + " w.description,"
+            + " w.source,"
+            + " w.category,"
+            + " w.urlName,"
+            + " w.image,"
+            + " w.createdDate)"
+            + " FROM Whisper w WHERE (local date - w.createdDate ) < 10 ORDER BY w.whisperLike.numberLike LIMIT 10")
+    List<WhisperDTO> getCarouselBig();
+
+
+    @Query("SELECT "
+            + " new com.whisper.dto.WhisperDTO("
+            + " w.authorName,"
+            + " w.title,"
+            + " w.description,"
+            + " w.source,"
+            + " w.category,"
+            + " w.urlName,"
+            + " w.image,"
+            + " w.createdDate)"
+            + " FROM Whisper w ORDER BY w.whisperLike.numberLike LIMIT 10")
+    List<WhisperDTO> getCarouselSmall();
 
     Whisper findByUrlName(String urlName);
 }

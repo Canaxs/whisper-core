@@ -1,5 +1,6 @@
 package com.whisper.controller;
 
+import com.whisper.dto.ExpireRequest;
 import com.whisper.dto.TokenDTO;
 import com.whisper.dto.UserAuthRequest;
 import com.whisper.service.AuthService;
@@ -39,8 +40,8 @@ public class AuthController {
         return authService.logout(authorization);
     }
 
-    @GetMapping("/isExpiredToken")
-    public Boolean isExpiredToken(@RequestHeader(name="Authorization") String authorization) {
-        return authService.isExpiredToken(authorization);
+    @PostMapping("/isExpiredToken")
+    public Boolean isExpiredToken(@RequestBody ExpireRequest expireRequest) {
+        return authService.isExpiredToken(expireRequest.getAuthorization());
     }
 }

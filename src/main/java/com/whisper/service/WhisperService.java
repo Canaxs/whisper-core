@@ -35,4 +35,10 @@ public interface WhisperService {
     List<WhisperPanelDTO> getPendingWhispers();
 
     List<WhisperDTO> getBestUserPoint();
+
+    List<WhisperDTO> getUserWhispers(String username);
+    List<WhisperDTO> getCarouselBig();
+
+    List<WhisperDTO> getCarouselSmall();
+
 }
