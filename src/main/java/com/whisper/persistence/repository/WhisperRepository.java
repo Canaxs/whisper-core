@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -71,7 +72,6 @@ public interface WhisperRepository extends JpaRepository<Whisper, Long> {
             + " FROM Whisper w WHERE w.authorName = :username")
     List<WhisperDTO> getUserWhispers(@Param("username") String username);
 
-
     @Query("SELECT "
             + " new com.whisper.dto.WhisperDTO("
             + " w.authorName,"
@@ -82,8 +82,8 @@ public interface WhisperRepository extends JpaRepository<Whisper, Long> {
             + " w.urlName,"
             + " w.image,"
             + " w.createdDate)"
-            + " FROM Whisper w WHERE (local date - w.createdDate ) < 10 ORDER BY w.whisperLike.numberLike LIMIT 10")
-    List<WhisperDTO> getCarouselBig();
+            + " FROM Whisper w WHERE w.createdDate >= :endDate ORDER BY w.whisperLike.numberLike LIMIT 10")
+    List<WhisperDTO> getCarouselBig(@Param("endDate") Date endDate);
 
 
     @Query("SELECT "

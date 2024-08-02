@@ -12,10 +12,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.text.Normalizer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Service
@@ -236,7 +235,10 @@ public class WhisperServiceImpl implements WhisperService {
 
     @Override
     public List<WhisperDTO> getCarouselBig() {
-        return whisperRepository.getCarouselBig();
+        Calendar endDate = Calendar.getInstance();
+        endDate.add(Calendar.DATE , -7);
+
+        return whisperRepository.getCarouselBig(endDate.getTime());
     }
 
     @Override
