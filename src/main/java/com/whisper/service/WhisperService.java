@@ -42,4 +42,6 @@ public interface WhisperService {
 
     List<WhisperDTO> getCarouselSmall();
 
+    Boolean controlLike(Long whisperId);
+
 }

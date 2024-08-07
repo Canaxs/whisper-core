@@ -51,10 +51,11 @@ public class WebSecurity {
                                 "/whisper/getBestUserPoint/**",
                                 "/whisper/getUserWhispers/**",
                                 "/whisper/carousel/big/**",
-                                "/whisper/carousel/small/**"
+                                "/whisper/carousel/small/**",
+                                "/whisper/getId/**"
                         ).permitAll()
                 ).authorizeHttpRequests(x ->
-                        x.requestMatchers("/user/**","/auth/logout/**","/whisper/locked/**").authenticated()
+                        x.requestMatchers("/user/**","/auth/logout/**","/whisper/locked/**","/whisper/control/like/**").authenticated()
                 )
                 .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())

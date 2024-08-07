@@ -1,6 +1,7 @@
 package com.whisper.dto;
 
 import com.whisper.enums.Category;
+import com.whisper.persistence.entity.WhisperLike;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -11,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Builder
@@ -25,4 +27,5 @@ public class UrlWhisperDTO {
     private String urlName;
     private String image;
     private Date createdDate;
+    private WhisperLike whisperLike;
 }

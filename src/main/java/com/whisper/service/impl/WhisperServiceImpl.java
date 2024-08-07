@@ -69,7 +69,7 @@ public class WhisperServiceImpl implements WhisperService {
 
     @Override
     public Whisper getWhisper(Long whisperId) {
-        return whisperRepository.getReferenceById(whisperId);
+        return whisperRepository.findById(whisperId).get();
     }
 
     @Override
@@ -209,6 +209,7 @@ public class WhisperServiceImpl implements WhisperService {
                 .image(whisper.getImage())
                 .category(Category.convertTR(whisper.getCategory()))
                 .createdDate(whisper.getCreatedDate())
+                .whisperLike(whisper.getWhisperLike())
                 .build();
 
     }
@@ -244,6 +245,12 @@ public class WhisperServiceImpl implements WhisperService {
     @Override
     public List<WhisperDTO> getCarouselSmall() {
         return whisperRepository.getCarouselSmall();
+    }
+
+    @Override
+    public Boolean controlLike(Long whisperId) {
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+        return whisperLikeRepository.controlLike(whisperId,user);
     }
 
     private String turkishToEnglish(String title) {

@@ -28,7 +28,7 @@ public class WhisperController {
         return ResponseEntity.ok(whisperService.createWhisper(whisperRequest));
     }
 
-    @GetMapping("/{whisperId}")
+    @GetMapping("/getId/{whisperId}")
     public ResponseEntity<Whisper> getWhisper(@PathVariable("whisperId") Long whisperId) {
         return ResponseEntity.ok(whisperService.getWhisper(whisperId));
     }
@@ -106,6 +106,11 @@ public class WhisperController {
     @GetMapping("/carousel/small")
     public ResponseEntity<List<WhisperDTO>> getCarouselSmall() {
         return ResponseEntity.ok(whisperService.getCarouselSmall());
+    }
+
+    @GetMapping("/control/like/{whisperId}")
+    public ResponseEntity<Boolean> controlLike(@PathVariable("whisperId") Long whisperId) {
+        return ResponseEntity.ok(whisperService.controlLike(whisperId));
     }
 
 }

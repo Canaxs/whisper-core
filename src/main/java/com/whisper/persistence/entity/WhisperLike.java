@@ -30,5 +30,6 @@ public class WhisperLike {
 
     @ManyToMany
     @JoinTable(name = "whisper_like_user",joinColumns = @JoinColumn(name = "whisper_like_id") , inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JsonIgnore
     private Set<User> users = new HashSet<>();
 }
