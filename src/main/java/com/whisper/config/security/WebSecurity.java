@@ -46,8 +46,6 @@ public class WebSecurity {
                                 "/user/createUser/**",
                                 "/user/id/**",
                                 "/user/username/**",
-                                "/user/getUsers/**",
-                                "/user/getMods/**",
                                 "/whisper/getBestUserPoint/**",
                                 "/whisper/getUserWhispers/**",
                                 "/whisper/carousel/big/**",
@@ -55,7 +53,15 @@ public class WebSecurity {
                                 "/whisper/getId/**"
                         ).permitAll()
                 ).authorizeHttpRequests(x ->
-                        x.requestMatchers("/user/**","/auth/logout/**","/whisper/locked/**","/whisper/control/like/**").authenticated()
+                        x.requestMatchers(
+                                "/user/**",
+                                "/auth/logout/**",
+                                "/whisper/locked/**",
+                                "/whisper/control/like/**",
+                                "/user/getUsers/**",
+                                "/user/getMods/**",
+                                "/user/updateRole/**"
+                        ).authenticated()
                 )
                 .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())

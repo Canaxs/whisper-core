@@ -7,6 +7,7 @@ import com.whisper.dto.UsersDTO;
 import com.whisper.persistence.entity.User;
 import com.whisper.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,21 +35,25 @@ public class UserController {
         return ResponseEntity.ok(userService.getUsername(username));
     }
     @DeleteMapping("/delete/{userId}")
+    @PreAuthorize("hasRole('ROLE_MOD')")
     public ResponseEntity<User> deleteUser(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok(userService.deleteUser(userId));
     }
 
     @GetMapping("/getUsers")
+    @PreAuthorize("hasRole('ROLE_MOD')")
     public ResponseEntity<List<User>> getUsers() {
         return ResponseEntity.ok(userService.getUsers());
     }
 
     @GetMapping("/getMods")
+    @PreAuthorize("hasRole('ROLE_MOD')")
     public ResponseEntity<List<User>> getMods() {
         return ResponseEntity.ok(userService.getMods());
     }
 
     @PutMapping("/updateRole")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<User> updateRole(@RequestBody RoleDTO roleDTO) {
         return ResponseEntity.ok(userService.updateAuthorities(roleDTO.getUserId(), roleDTO.getRole()));
     }
