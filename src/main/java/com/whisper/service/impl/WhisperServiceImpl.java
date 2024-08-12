@@ -239,7 +239,14 @@ public class WhisperServiceImpl implements WhisperService {
         Calendar endDate = Calendar.getInstance();
         endDate.add(Calendar.DATE , -7);
 
-        return whisperRepository.getCarouselBig(endDate.getTime());
+        Calendar endDate2 = Calendar.getInstance();
+        endDate.add(Calendar.DATE , -15);
+
+        Calendar endDate3 = Calendar.getInstance();
+        endDate.add(Calendar.DATE , -30);
+
+
+        return whisperRepository.getCarouselBig(endDate.getTime(),endDate2.getTime(),endDate3.getTime());
     }
 
     @Override
