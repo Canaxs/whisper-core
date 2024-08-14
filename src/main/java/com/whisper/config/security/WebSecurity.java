@@ -60,7 +60,8 @@ public class WebSecurity {
                                 "/whisper/control/like/**",
                                 "/user/getUsers/**",
                                 "/user/getMods/**",
-                                "/user/updateRole/**"
+                                "/user/updateRole/**",
+                                "/whisper/updateActive/**"
                         ).authenticated()
                 )
                 .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

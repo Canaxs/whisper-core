@@ -260,6 +260,34 @@ public class WhisperServiceImpl implements WhisperService {
         return whisperLikeRepository.controlLike(whisperId,user);
     }
 
+    @Override
+    public Boolean updateIsActive(Long whisperId) {
+        Whisper whisper;
+        try {
+            whisper = whisperRepository.findById(whisperId).get();
+            whisper.setIsActive(true);
+            whisperRepository.save(whisper);
+            return true;
+        }
+        catch (Exception e) {
+            throw new RuntimeException();
+        }
+    }
+
+    @Override
+    public Boolean updateIsDelete(Long whisperId) {
+        Whisper whisper;
+        try {
+            whisper = whisperRepository.findById(whisperId).get();
+            whisper.setIsDelete(true);
+            whisperRepository.save(whisper);
+            return true;
+        }
+        catch (Exception e) {
+            throw new RuntimeException();
+        }
+    }
+
     private String turkishToEnglish(String title) {
         return title.replace('Ğ','g')
                 .replace('Ü','u')

@@ -18,7 +18,7 @@ import java.util.List;
 @Repository
 public interface WhisperRepository extends JpaRepository<Whisper, Long> {
 
-    @Query("FROM Whisper w WHERE  w.category  = :category ORDER BY w.Id DESC")
+    @Query("FROM Whisper w WHERE w.category  = :category AND w.isActive = true ORDER BY w.Id DESC")
     Page<Whisper> findByCategory(Category category, Pageable pageable);
 
     @Query("SELECT Id FROM Whisper order by Id desc limit 1")
@@ -32,7 +32,7 @@ public interface WhisperRepository extends JpaRepository<Whisper, Long> {
             + " w.description,"
             + " w.source,"
             + "w.category )"
-            + " FROM Whisper w WHERE w.isActive = false ORDER BY w.Id DESC")
+            + " FROM Whisper w WHERE w.isActive = false AND W.isDelete = false ORDER BY w.Id DESC")
     List<WhisperPanelDTO> getAllByPendingWhispers();
 
     @Query("SELECT "
@@ -43,7 +43,7 @@ public interface WhisperRepository extends JpaRepository<Whisper, Long> {
             + " w.description,"
             + " w.source,"
             + "w.category )"
-            + " FROM Whisper w ORDER BY w.Id DESC")
+            + " FROM Whisper w WHERE w.isActive = true AND W.isDelete = false ORDER BY w.Id DESC")
     List<WhisperPanelDTO> getAllByWhispers();
 
     @Query("SELECT "
@@ -56,7 +56,7 @@ public interface WhisperRepository extends JpaRepository<Whisper, Long> {
             + " w.urlName,"
             + " w.image,"
             + " w.createdDate)"
-            + " FROM Whisper w ORDER BY w.whisperLike.numberLike DESC LIMIT 24")
+            + " FROM Whisper w WHERE w.isActive = true ORDER BY w.whisperLike.numberLike DESC LIMIT 24")
     List<WhisperDTO> getBestUserPoint();
 
     @Query("SELECT "
@@ -69,7 +69,7 @@ public interface WhisperRepository extends JpaRepository<Whisper, Long> {
             + " w.urlName,"
             + " w.image,"
             + " w.createdDate)"
-            + " FROM Whisper w WHERE w.authorName = :username")
+            + " FROM Whisper w WHERE w.authorName = :username AND w.isActive = true ")
     List<WhisperDTO> getUserWhispers(@Param("username") String username);
 
     @Query("SELECT "
@@ -82,7 +82,9 @@ public interface WhisperRepository extends JpaRepository<Whisper, Long> {
             + " w.urlName,"
             + " w.image,"
             + " w.createdDate)"
-            + " FROM Whisper w WHERE (w.createdDate >= :endDate or w.createdDate >= :endDate2 or w.createdDate >= :endDate3 ) ORDER BY w.whisperLike.numberLike LIMIT 10")
+            + " FROM Whisper w WHERE (w.createdDate >= :endDate or w.createdDate >= :endDate2 or w.createdDate >= :endDate3 ) "
+            + " AND w.isActive = true "
+            + " ORDER BY w.whisperLike.numberLike LIMIT 10")
     List<WhisperDTO> getCarouselBig(@Param("endDate") Date endDate,
                                     @Param("endDate2") Date endDate2,
                                     @Param("endDate3") Date endDate3 );
@@ -98,7 +100,7 @@ public interface WhisperRepository extends JpaRepository<Whisper, Long> {
             + " w.urlName,"
             + " w.image,"
             + " w.createdDate)"
-            + " FROM Whisper w ORDER BY w.whisperLike.numberLike LIMIT 10")
+            + " FROM Whisper w WHERE w.isActive = true ORDER BY w.whisperLike.numberLike LIMIT 10")
     List<WhisperDTO> getCarouselSmall();
 
     Whisper findByUrlName(String urlName);

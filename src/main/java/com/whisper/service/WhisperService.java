@@ -44,4 +44,8 @@ public interface WhisperService {
 
     Boolean controlLike(Long whisperId);
 
+    Boolean updateIsActive(Long whisperId);
+
+    Boolean updateIsDelete(Long whisperId);
+
 }

@@ -8,6 +8,7 @@ import com.whisper.service.WhisperService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -111,6 +112,18 @@ public class WhisperController {
     @GetMapping("/control/like/{whisperId}")
     public ResponseEntity<Boolean> controlLike(@PathVariable("whisperId") Long whisperId) {
         return ResponseEntity.ok(whisperService.controlLike(whisperId));
+    }
+
+    @GetMapping("/updateActive/{whisperId}")
+    @PreAuthorize("hasRole('ROLE_MOD')")
+    public ResponseEntity<Boolean> updateIsActive(@PathVariable("whisperId") Long whisperId) {
+        return ResponseEntity.ok(whisperService.updateIsActive(whisperId));
+    }
+
+    @GetMapping("/updateDelete/{whisperId}")
+    @PreAuthorize("hasRole('ROLE_MOD')")
+    public ResponseEntity<Boolean> updateIsDelete(@PathVariable("whisperId") Long whisperId) {
+        return ResponseEntity.ok(whisperService.updateIsDelete(whisperId));
     }
 
 }
