@@ -107,11 +107,18 @@ public class UserService implements UserDetailsService {
     public User updateAuthorities(Long userId, String role) {
         User user = userRepository.getReferenceById(userId);
         Set<Role> roles = user.getAuthorities();
+        roles.clear();
         if(role.equalsIgnoreCase("MOD")) {
+            roles.add(Role.ROLE_USER);
             roles.add(Role.ROLE_MOD);
         }
         else if (role.equalsIgnoreCase("ADMIN")) {
+            roles.add(Role.ROLE_USER);
+            roles.add(Role.ROLE_MOD);
             roles.add(Role.ROLE_ADMIN);
+        }
+        else if (role.equalsIgnoreCase("USER")) {
+            roles.add(Role.ROLE_USER);
         }
         return userRepository.save(user);
     }
