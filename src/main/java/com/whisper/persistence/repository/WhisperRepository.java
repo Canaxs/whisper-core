@@ -32,7 +32,7 @@ public interface WhisperRepository extends JpaRepository<Whisper, Long> {
             + " w.description,"
             + " w.source,"
             + "w.category )"
-            + " FROM Whisper w WHERE w.isActive = false AND W.isDelete = false ORDER BY w.Id DESC")
+            + " FROM Whisper w WHERE w.isActive = false AND w.isDelete = false ORDER BY w.Id DESC")
     List<WhisperPanelDTO> getAllByPendingWhispers();
 
     @Query("SELECT "
@@ -43,7 +43,7 @@ public interface WhisperRepository extends JpaRepository<Whisper, Long> {
             + " w.description,"
             + " w.source,"
             + "w.category )"
-            + " FROM Whisper w WHERE w.isActive = true AND W.isDelete = false ORDER BY w.Id DESC")
+            + " FROM Whisper w WHERE w.isActive = true AND w.isDelete = false ORDER BY w.Id DESC")
     List<WhisperPanelDTO> getAllByWhispers();
 
     @Query("SELECT "
