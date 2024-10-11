@@ -9,7 +9,7 @@
     <img src="https://www.cdnlogo.com/logos/w/39/whisper.svg" alt="Logo" width="150" height="150">
   </a>
 
-<h3 align="center">Whisper UI App</h3>
+<h3 align="center">Whisper Core </h3>
 </div>
 
 <!-- ABOUT THE PROJECT -->
