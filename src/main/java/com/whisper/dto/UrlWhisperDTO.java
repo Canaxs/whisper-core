@@ -21,6 +21,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UrlWhisperDTO {
+	private Long Id;
     private String authorName;
     private String title;
     private String description;

@@ -202,6 +202,7 @@ public class WhisperServiceImpl implements WhisperService {
             //throw new RuntimeException();
         }
         return UrlWhisperDTO.builder()
+        		.Id(whisper.getId())
                 .authorName(whisper.getAuthorName())
                 .title(whisper.getTitle())
                 .description(whisper.getDescription())
