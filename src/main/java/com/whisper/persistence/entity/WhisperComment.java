@@ -1,5 +1,7 @@
 package com.whisper.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,5 +23,6 @@ public class WhisperComment {
     private User user;
 
     @ManyToOne
+    @JsonIgnore
     private Whisper whisper;
 }

@@ -28,6 +28,7 @@ public class User implements UserDetails {
     private String username;
 
     @NotNull
+    @JsonIgnore
     private String password;
 
     @Column (nullable = false)
