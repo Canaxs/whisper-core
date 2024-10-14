@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -29,5 +30,5 @@ public class UrlWhisperDTO {
     private String image;
     private Date createdDate;
     private WhisperLike whisperLike;
-    private WhisperComment whisperComment;
+    private Set<WhisperComment> whisperComment;
 }
