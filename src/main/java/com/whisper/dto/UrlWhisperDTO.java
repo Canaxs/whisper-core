@@ -1,6 +1,7 @@
 package com.whisper.dto;
 
 import com.whisper.enums.Category;
+import com.whisper.persistence.entity.WhisperComment;
 import com.whisper.persistence.entity.WhisperLike;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
@@ -28,4 +29,5 @@ public class UrlWhisperDTO {
     private String image;
     private Date createdDate;
     private WhisperLike whisperLike;
+    private WhisperComment whisperComment;
 }

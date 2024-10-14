@@ -210,6 +210,7 @@ public class WhisperServiceImpl implements WhisperService {
                 .category(Category.convertTR(whisper.getCategory()))
                 .createdDate(whisper.getCreatedDate())
                 .whisperLike(whisper.getWhisperLike())
+                .whisperComment(whisper.getWhisperComment())
                 .build();
 
     }
