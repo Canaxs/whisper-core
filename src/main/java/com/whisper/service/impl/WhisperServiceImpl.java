@@ -5,9 +5,12 @@ import com.whisper.enums.Category;
 import com.whisper.persistence.entity.*;
 import com.whisper.persistence.repository.*;
 import com.whisper.service.WhisperService;
+import com.whisper.specification.WhisperFilter;
+import com.whisper.specification.WhisperSpecification;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -288,6 +291,12 @@ public class WhisperServiceImpl implements WhisperService {
         catch (Exception e) {
             throw new RuntimeException();
         }
+    }
+
+    @Override
+    public Page<Whisper> getWhispersFilter(WhisperFilter whisperFilter, Pageable page) {
+        Specification<Whisper> spec = WhisperSpecification.filterBy(whisperFilter);
+        return whisperRepository.findAll(spec, page);
     }
 
     private String turkishToEnglish(String title) {

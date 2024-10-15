@@ -5,6 +5,7 @@ import com.whisper.persistence.entity.User;
 import com.whisper.persistence.entity.Whisper;
 import com.whisper.persistence.entity.WhisperComment;
 import com.whisper.persistence.entity.WhisperView;
+import com.whisper.specification.WhisperFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -47,5 +48,7 @@ public interface WhisperService {
     Boolean updateIsActive(Long whisperId);
 
     Boolean updateIsDelete(Long whisperId);
+
+    Page<Whisper> getWhispersFilter(WhisperFilter whisperFilter , Pageable page);
 
 }

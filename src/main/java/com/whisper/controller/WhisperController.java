@@ -5,6 +5,7 @@ import com.whisper.persistence.entity.Whisper;
 import com.whisper.persistence.entity.WhisperComment;
 import com.whisper.persistence.entity.WhisperView;
 import com.whisper.service.WhisperService;
+import com.whisper.specification.WhisperFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -97,6 +98,11 @@ public class WhisperController {
     @GetMapping("/getUserWhispers/{username}")
     public ResponseEntity<List<WhisperDTO>> getUserWhispers(@PathVariable("username") String username) {
         return ResponseEntity.ok(whisperService.getUserWhispers(username));
+    }
+
+    @PostMapping("/getWhispersFilter")
+    public ResponseEntity<Page<Whisper>> getWhispersFilter(@RequestBody WhisperFilter whisperFilter , Pageable page) {
+        return ResponseEntity.ok(whisperService.getWhispersFilter(whisperFilter, page));
     }
 
     @GetMapping("/carousel/big")

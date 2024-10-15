@@ -50,7 +50,8 @@ public class WebSecurity {
                                 "/whisper/getUserWhispers/**",
                                 "/whisper/carousel/big/**",
                                 "/whisper/carousel/small/**",
-                                "/whisper/getId/**"
+                                "/whisper/getId/**",
+                                "/whisper/getWhispersFilter/**"
                         ).permitAll()
                 ).authorizeHttpRequests(x ->
                         x.requestMatchers(
