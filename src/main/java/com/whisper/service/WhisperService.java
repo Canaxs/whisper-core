@@ -8,13 +8,14 @@ import com.whisper.persistence.entity.WhisperView;
 import com.whisper.specification.WhisperFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.util.List;
 
 public interface WhisperService {
 
-    Whisper createWhisper(WhisperRequest whisperRequest);
+    Whisper createWhisper(WhisperRequest whisperRequest , MultipartFile imageFile);
     Whisper getWhisper(Long whisperId);
     Whisper updateWhisper(Whisper whisper);
     String deleteWhisper(Long whisperId);
@@ -50,5 +51,7 @@ public interface WhisperService {
     Boolean updateIsDelete(Long whisperId);
 
     Page<Whisper> getWhispersFilter(WhisperFilter whisperFilter , Pageable page);
+
+    String uploadImgBB(MultipartFile imageFile);
 
 }

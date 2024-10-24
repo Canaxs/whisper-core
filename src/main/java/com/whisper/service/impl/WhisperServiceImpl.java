@@ -1,5 +1,7 @@
 package com.whisper.service.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whisper.dto.*;
 import com.whisper.enums.Category;
 import com.whisper.persistence.entity.*;
@@ -8,11 +10,17 @@ import com.whisper.service.WhisperService;
 import com.whisper.specification.WhisperFilter;
 import com.whisper.specification.WhisperSpecification;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.text.Normalizer;
 import java.text.ParseException;
@@ -30,6 +38,12 @@ public class WhisperServiceImpl implements WhisperService {
     private final UserRepository userRepository;
     private final WhisperCommentRepository whisperCommentRepository;
 
+    @Value("${imgbb.key}")
+    private String imgBBKey;
+
+    @Value("${imgbb.uploadURL}")
+    private String imgBBUploadURL;
+
 
     public WhisperServiceImpl(WhisperRepository whisperRepository, WhisperLikeRepository whisperLikeRepository, WhisperViewRepository whisperViewRepository, UserRepository userRepository, WhisperCommentRepository whisperCommentRepository) {
         this.whisperRepository = whisperRepository;
@@ -41,11 +55,15 @@ public class WhisperServiceImpl implements WhisperService {
 
 
     @Override
-    public Whisper createWhisper(WhisperRequest whisperRequest) {
+    public Whisper createWhisper(WhisperRequest whisperRequest, MultipartFile imageFile) {
+        String imageURL = null;
+        if(!imageFile.isEmpty()){
+             imageURL = uploadImgBB(imageFile);
+        }
         Whisper whisper = Whisper.builder()
                 .authorName(SecurityContextHolder.getContext().getAuthentication().getName())
                 .title(whisperRequest.title())
-                .image(whisperRequest.image())
+                .imageURL(imageURL)
                 .description(whisperRequest.description())
                 .source(whisperRequest.source())
                 .isActive(false)
@@ -210,7 +228,7 @@ public class WhisperServiceImpl implements WhisperService {
                 .title(whisper.getTitle())
                 .description(whisper.getDescription())
                 .source(whisper.getSource())
-                .image(whisper.getImage())
+                .image(whisper.getImageURL())
                 .category(Category.convertTR(whisper.getCategory()))
                 .createdDate(whisper.getCreatedDate())
                 .whisperLike(whisper.getWhisperLike())
@@ -297,6 +315,40 @@ public class WhisperServiceImpl implements WhisperService {
     public Page<Whisper> getWhispersFilter(WhisperFilter whisperFilter, Pageable page) {
         Specification<Whisper> spec = WhisperSpecification.filterBy(whisperFilter);
         return whisperRepository.findAll(spec, page);
+    }
+
+    @Override
+    public String uploadImgBB(MultipartFile imageFile) {
+        String imgBBUrl = imgBBUploadURL + "?key=" + imgBBKey;
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+
+            byte[] fileContent = imageFile.getBytes();
+            String encodedString = java.util.Base64.getEncoder().encodeToString(fileContent);
+
+            MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+            body.add("image", encodedString);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+            HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(body, headers);
+
+            ResponseEntity<String> response = restTemplate.exchange(imgBBUrl, HttpMethod.POST, entity, String.class);
+
+            if(response.getStatusCode() == HttpStatus.OK) {
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode jsonNode = mapper.readTree(response.getBody());
+                return jsonNode.path("data").path("url").asText();
+            }
+            else {
+                throw new RuntimeException();
+            }
+
+        }
+        catch (Exception e) {
+            throw new RuntimeException();
+        }
     }
 
     private String turkishToEnglish(String title) {

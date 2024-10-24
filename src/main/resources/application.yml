@@ -8,6 +8,14 @@ spring:
     active: prod
   jpa:
     show-sql: false
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
 
 jwt:
   key: "mYiADZOy9Hq5pTfomhj9hPUJLGAN/ZB6AZ4yoHfCtN0f8DaNQr6+4qeaJ9YfMK4ZbX85J3ao6TotW+jrLKLGeafpaYYLn2mmrYOB/1mJzhQYEaf883PtWAIwnTwHpPuEsJAhyHwEtlTvy++pZA+0bns66RUDBk80bJUA4JhJUI8="
+
+imgbb:
+  key: "8d19c71872eb1918e013fd95452abc13"
+  uploadURL: "https://api.imgbb.com/1/upload"

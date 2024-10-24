@@ -58,7 +58,7 @@ public interface WhisperRepository extends JpaRepository<Whisper, Long> , JpaSpe
             + " w.source,"
             + " w.category,"
             + " w.urlName,"
-            + " w.image,"
+            + " w.imageURL,"
             + " w.createdDate)"
             + " FROM Whisper w WHERE w.isActive = true ORDER BY w.whisperLike.numberLike DESC LIMIT 24")
     List<WhisperDTO> getBestUserPoint();
@@ -71,7 +71,7 @@ public interface WhisperRepository extends JpaRepository<Whisper, Long> , JpaSpe
             + " w.source,"
             + " w.category,"
             + " w.urlName,"
-            + " w.image,"
+            + " w.imageURL,"
             + " w.createdDate)"
             + " FROM Whisper w WHERE w.authorName = :username AND w.isActive = true ")
     List<WhisperDTO> getUserWhispers(@Param("username") String username);
@@ -84,7 +84,7 @@ public interface WhisperRepository extends JpaRepository<Whisper, Long> , JpaSpe
             + " w.source,"
             + " w.category,"
             + " w.urlName,"
-            + " w.image,"
+            + " w.imageURL,"
             + " w.createdDate)"
             + " FROM Whisper w WHERE (w.createdDate >= :endDate or w.createdDate >= :endDate2 or w.createdDate >= :endDate3 ) "
             + " AND w.isActive = true "
@@ -102,7 +102,7 @@ public interface WhisperRepository extends JpaRepository<Whisper, Long> , JpaSpe
             + " w.source,"
             + " w.category,"
             + " w.urlName,"
-            + " w.image,"
+            + " w.imageURL,"
             + " w.createdDate)"
             + " FROM Whisper w WHERE w.isActive = true ORDER BY w.whisperLike.numberLike LIMIT 10")
     List<WhisperDTO> getCarouselSmall();

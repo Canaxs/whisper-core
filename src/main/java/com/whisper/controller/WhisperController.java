@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -26,8 +27,9 @@ public class WhisperController {
     }
 
     @PostMapping("/locked/create")
-    public ResponseEntity<Whisper> createWhisper(@RequestBody WhisperRequest whisperRequest) {
-        return ResponseEntity.ok(whisperService.createWhisper(whisperRequest));
+    public ResponseEntity<Whisper> createWhisper(@RequestPart("whisperRequest") WhisperRequest whisperRequest,
+                                                 @RequestPart("image") MultipartFile imageFile) {
+        return ResponseEntity.ok(whisperService.createWhisper(whisperRequest , imageFile));
     }
 
     @GetMapping("/getId/{whisperId}")

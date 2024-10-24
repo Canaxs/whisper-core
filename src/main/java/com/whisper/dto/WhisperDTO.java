@@ -23,6 +23,6 @@ public class WhisperDTO {
     private String source;
     private Category category;
     private String urlName;
-    private String image;
+    private String imageURL;
     private Date createdDate;
 }

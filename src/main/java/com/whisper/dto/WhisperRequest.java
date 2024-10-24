@@ -6,6 +6,5 @@ public record WhisperRequest (
         String title,
         String description,
         String source,
-        String category,
-        String image
+        String category
 ) { }

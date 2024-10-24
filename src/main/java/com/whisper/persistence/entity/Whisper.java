@@ -38,7 +38,7 @@ public class Whisper extends BaseEntity {
     @Column(unique = true)
     private String urlName;
 
-    private String image;
+    private String imageURL;
 
     private Boolean isActive;
 
