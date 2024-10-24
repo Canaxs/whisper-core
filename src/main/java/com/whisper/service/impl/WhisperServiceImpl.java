@@ -228,7 +228,7 @@ public class WhisperServiceImpl implements WhisperService {
                 .title(whisper.getTitle())
                 .description(whisper.getDescription())
                 .source(whisper.getSource())
-                .image(whisper.getImageURL())
+                .imageURL(whisper.getImageURL())
                 .category(Category.convertTR(whisper.getCategory()))
                 .createdDate(whisper.getCreatedDate())
                 .whisperLike(whisper.getWhisperLike())

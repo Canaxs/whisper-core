@@ -28,7 +28,7 @@ public class UrlWhisperDTO {
     private String source;
     private String category;
     private String urlName;
-    private String image;
+    private String imageURL;
     private Date createdDate;
     private WhisperLike whisperLike;
     private Set<WhisperComment> whisperComment;
