@@ -41,7 +41,7 @@ public class DisputeServiceImpl implements DisputeService {
     public Dispute createDispute(CreateDisputeRequest createDisputeRequest) {
         try {
             User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
-            Whisper whisper = whisperRepository.getReferenceById(createDisputeRequest.whisperId());
+            Whisper whisper = whisperRepository.findById(createDisputeRequest.whisperId()).get();
             Dispute dispute = Dispute.builder()
                     .description(createDisputeRequest.description())
                     .whisper(whisper)
@@ -63,7 +63,7 @@ public class DisputeServiceImpl implements DisputeService {
 
     @Override
     public Dispute getDispute(Long disputeId) {
-        return disputeRepository.getReferenceById(disputeId);
+        return disputeRepository.findById(disputeId).get();
     }
 
     @Override
@@ -75,7 +75,7 @@ public class DisputeServiceImpl implements DisputeService {
     public Dispute deleteDispute(Long disputeId) {
         Dispute dispute;
         try {
-            dispute = disputeRepository.getReferenceById(disputeId);
+            dispute = disputeRepository.findById(disputeId).get();
             disputeRepository.delete(dispute);
         }
         catch (Exception e) {
@@ -105,7 +105,7 @@ public class DisputeServiceImpl implements DisputeService {
     @Override
     public String likeDispute(Long disputeId) {
         if(disputeLikeRepository.existsById(disputeId)) {
-            DisputeLike disputeLike = disputeLikeRepository.getReferenceById(disputeId);
+            DisputeLike disputeLike = disputeLikeRepository.findById(disputeId).get();
             String securityName = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userRepository.findByUsername(securityName).get();
             if(!disputeLike.getUsers().contains(user)) {
@@ -126,7 +126,7 @@ public class DisputeServiceImpl implements DisputeService {
     @Override
     public String dislikeDispute(Long disputeId) {
         if(disputeLikeRepository.existsById(disputeId)) {
-            DisputeLike disputeLike = disputeLikeRepository.getReferenceById(disputeId);
+            DisputeLike disputeLike = disputeLikeRepository.findById(disputeId).get();
             String securityName = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userRepository.findByUsername(securityName).get();
             if(!disputeLike.getUsers().contains(user)) {
