@@ -95,10 +95,11 @@ public class DisputeServiceImpl implements DisputeService {
                         dispute.getDescription(),
                         dispute.getUser(),
                         dispute.getWhisper().getTitle(),
-                        dispute.getWhisper().getImageURL(),
+                        dispute.getWhisper().getUrlName(),
                         dispute.getWhisper().getCategory(),
                         dispute.getWhisper().getSource(),
                         dispute.getWhisper().getAuthorName(),
+                        dispute.getWhisper().getImageURL(),
                         dispute.getDisputeComments().size()))
                 .collect(Collectors.toList()), page, totalElements);
     }

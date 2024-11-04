@@ -21,6 +21,7 @@ public class DisputeDTO {
     private Category whisperCategory;
     private String whisperSource;
     private String whisperAuthorName;
+    private String whisperImageURL;
 
     private Integer commentSize;
 
