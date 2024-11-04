@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DisputeDTO {
 
+    private Long id;
+
     private String description;
     private User user;
 

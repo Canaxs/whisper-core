@@ -91,6 +91,7 @@ public class DisputeServiceImpl implements DisputeService {
         return new PageImpl<DisputeDTO>(disputes.getContent()
                 .stream()
                 .map(dispute -> new DisputeDTO(
+                        dispute.getId(),
                         dispute.getDescription(),
                         dispute.getUser(),
                         dispute.getWhisper().getTitle(),
