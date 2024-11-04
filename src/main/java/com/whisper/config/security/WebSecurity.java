@@ -51,7 +51,9 @@ public class WebSecurity {
                                 "/whisper/carousel/big/**",
                                 "/whisper/carousel/small/**",
                                 "/whisper/getId/**",
-                                "/whisper/getWhispersFilter/**"
+                                "/whisper/getWhispersFilter/**",
+                                "/dispute/getDispute/**",
+                                "/dispute/getAll/**"
                         ).permitAll()
                 ).authorizeHttpRequests(x ->
                         x.requestMatchers(
@@ -62,7 +64,13 @@ public class WebSecurity {
                                 "/user/getUsers/**",
                                 "/user/getMods/**",
                                 "/user/updateRole/**",
-                                "/whisper/updateActive/**"
+                                "/whisper/updateActive/**",
+                                "/dispute/create/**",
+                                "/dispute/updateDispute/**",
+                                "/dispute/deleteDispute/**",
+                                "/dispute/like/**",
+                                "/dispute/createComment/**",
+                                "/dispute/deleteComment/**"
                         ).authenticated()
                 )
                 .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -24,7 +24,7 @@ public class DisputeController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Dispute> createWhisper(@RequestBody CreateDisputeRequest createDisputeRequest) {
+    public ResponseEntity<Dispute> createDispute(@RequestBody CreateDisputeRequest createDisputeRequest) {
         return ResponseEntity.ok(disputeService.createDispute(createDisputeRequest));
     }
 
