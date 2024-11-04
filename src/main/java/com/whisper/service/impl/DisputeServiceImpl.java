@@ -94,7 +94,7 @@ public class DisputeServiceImpl implements DisputeService {
                         dispute.getDescription(),
                         dispute.getUser(),
                         dispute.getWhisper().getTitle(),
-                        dispute.getWhisper().getUrlName(),
+                        dispute.getWhisper().getImageURL(),
                         dispute.getWhisper().getCategory(),
                         dispute.getWhisper().getSource(),
                         dispute.getWhisper().getAuthorName(),
