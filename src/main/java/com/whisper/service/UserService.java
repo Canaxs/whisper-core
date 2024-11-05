@@ -64,7 +64,7 @@ public class UserService implements UserDetailsService {
         return UserDTO.builder()
                 .username(user.getUsername())
                 .userPoint(user.getUserPoint())
-                .authorities(user.getAuthorities())
+                .authorities(getSupremeAuthority(user.getAuthorities()))
                 .build();
     }
     public User deleteUser(Long userId) {
@@ -90,9 +90,22 @@ public class UserService implements UserDetailsService {
             return UserDTO.builder()
                     .username(user.getUsername())
                     .userPoint(user.getUserPoint())
-                    .authorities(user.getAuthorities())
+                    .authorities(getSupremeAuthority(user.getAuthorities()))
                     .build();
     }
+
+    public String getSupremeAuthority(Set<Role> authorities) {
+        if(authorities.contains(Role.ROLE_ADMIN)) {
+            return "Admin";
+        }
+        else if (authorities.contains(Role.ROLE_MOD)) {
+            return "Moderatör";
+        }
+        else {
+            return "Kullanıcı";
+        }
+    }
+
 
     public List<User> getUsers() {
         return userRepository.findAll();

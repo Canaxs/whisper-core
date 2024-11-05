@@ -11,5 +11,5 @@ import java.util.Set;
 public class UserDTO {
     private String username;
     private Integer userPoint;
-    private Set<Role> authorities;
+    private String authorities;
 }
