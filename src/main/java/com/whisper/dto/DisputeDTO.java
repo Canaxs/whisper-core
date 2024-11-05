@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,6 +17,7 @@ public class DisputeDTO {
 
     private String description;
     private User user;
+    private Date createdDate;
 
     private String whisperTitle;
     private String whisperUrlName;
