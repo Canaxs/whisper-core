@@ -127,14 +127,77 @@ public class WhisperServiceImpl implements WhisperService {
             WhisperLike whisperLike = whisperLikeRepository.getReferenceById(whisperId);
             String securityName = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userRepository.findByUsername(securityName).get();
-            if(!whisperLike.getUsers().contains(user)) {
-                whisperLike.getUsers().add(user);
+            if(!whisperLike.getLikeUsers().contains(user) && !whisperLike.getDislikeUsers().contains(user)) {
+                whisperLike.getLikeUsers().add(user);
                 whisperLike.setNumberLike(whisperLike.getNumberLike()+1);
                 whisperLikeRepository.save(whisperLike);
                 return "Successfully liked";
             }
             else {
                 return "User already liked";
+            }
+        }
+        else {
+            throw new RuntimeException();
+        }
+    }
+
+    @Override
+    public String dislikeWhisper(Long whisperId) {
+        if(whisperLikeRepository.existsById(whisperId)) {
+            WhisperLike whisperLike = whisperLikeRepository.getReferenceById(whisperId);
+            String securityName = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userRepository.findByUsername(securityName).get();
+            if(!whisperLike.getDislikeUsers().contains(user) && !whisperLike.getLikeUsers().contains(user)) {
+                whisperLike.getDislikeUsers().add(user);
+                whisperLike.setNumberDislike(whisperLike.getNumberDislike()+1);
+                whisperLikeRepository.save(whisperLike);
+                return "Successfully liked";
+            }
+            else {
+                return "User already liked";
+            }
+        }
+        else {
+            throw new RuntimeException();
+        }
+    }
+
+    @Override
+    public String unLikeWhisper(Long whisperId) {
+        if(whisperLikeRepository.existsById(whisperId)) {
+            WhisperLike whisperLike = whisperLikeRepository.getReferenceById(whisperId);
+            String securityName = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userRepository.findByUsername(securityName).get();
+            if(whisperLike.getLikeUsers().contains(user)) {
+                whisperLike.getLikeUsers().remove(user);
+                whisperLike.setNumberLike(whisperLike.getNumberLike()-1);
+                whisperLikeRepository.save(whisperLike);
+                return "Successfully unliked";
+            }
+            else {
+                return "User already unliked";
+            }
+        }
+        else {
+            throw new RuntimeException();
+        }
+    }
+
+    @Override
+    public String unDislikeWhisper(Long whisperId) {
+        if(whisperLikeRepository.existsById(whisperId)) {
+            WhisperLike whisperLike = whisperLikeRepository.getReferenceById(whisperId);
+            String securityName = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userRepository.findByUsername(securityName).get();
+            if(whisperLike.getDislikeUsers().contains(user)) {
+                whisperLike.getDislikeUsers().remove(user);
+                whisperLike.setNumberDislike(whisperLike.getNumberDislike()-1);
+                whisperLikeRepository.save(whisperLike);
+                return "Successfully unDisliked";
+            }
+            else {
+                return "User already unDisliked";
             }
         }
         else {
@@ -281,6 +344,12 @@ public class WhisperServiceImpl implements WhisperService {
     public Boolean controlLike(Long whisperId) {
         User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
         return whisperLikeRepository.controlLike(whisperId,user);
+    }
+
+    @Override
+    public Boolean controlDislike(Long whisperId) {
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+        return whisperLikeRepository.controlDislike(whisperId,user);
     }
 
     @Override

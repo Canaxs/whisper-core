@@ -53,6 +53,16 @@ public class DisputeController {
         return ResponseEntity.ok(disputeService.dislikeDispute(disputeId));
     }
 
+    @GetMapping("/unlike/{disputeId}")
+    public ResponseEntity<String> unLikeDispute(@PathVariable("disputeId") Long disputeId) {
+        return ResponseEntity.ok(disputeService.unLikeDispute(disputeId));
+    }
+
+    @GetMapping("/undislike/{disputeId}")
+    public ResponseEntity<String> unDislikeDispute(@PathVariable("disputeId") Long disputeId) {
+        return ResponseEntity.ok(disputeService.unDislikeDispute(disputeId));
+    }
+
     @PostMapping("/getAll")
     public ResponseEntity<Page<DisputeDTO>> getAll(Pageable page) {
         return ResponseEntity.ok(disputeService.getAll(page));
@@ -66,6 +76,16 @@ public class DisputeController {
     @DeleteMapping("/deleteComment")
     public ResponseEntity<Boolean> deleteComment(@RequestBody DisputeCommentDeleteRequest disputeCommentDeleteRequest) {
         return ResponseEntity.ok(disputeService.deleteComment(disputeCommentDeleteRequest));
+    }
+
+    @GetMapping("/control/like/{disputeId}")
+    public ResponseEntity<Boolean> controlLike(@PathVariable("disputeId") Long disputeId) {
+        return ResponseEntity.ok(disputeService.controlLike(disputeId));
+    }
+
+    @GetMapping("/control/dislike/{disputeId}")
+    public ResponseEntity<Boolean> controlDislike(@PathVariable("disputeId") Long disputeId) {
+        return ResponseEntity.ok(disputeService.controlDislike(disputeId));
     }
 
 }

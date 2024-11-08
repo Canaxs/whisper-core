@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WhisperLikeRepository extends JpaRepository<WhisperLike , Long> {
 
-    @Query("SELECT count(*) > 0 from WhisperLike w where w.Id = :whisperId and :user member w.users")
+    @Query("SELECT count(*) > 0 from WhisperLike w where w.Id = :whisperId and :user member w.likeUsers")
     Boolean controlLike(Long whisperId,User user);
+
+    @Query("SELECT count(*) > 0 from WhisperLike w where w.Id = :whisperId and :user member w.dislikeUsers")
+    Boolean controlDislike(Long whisperId,User user);
 }

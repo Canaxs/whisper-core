@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,13 +29,16 @@ public class DisputeServiceImpl implements DisputeService {
 
     private final WhisperRepository whisperRepository;
 
+    private final DisputeTagRepository disputeTagRepository;
+
     private final UserRepository userRepository;
 
-    public DisputeServiceImpl(DisputeRepository disputeRepository, DisputeCommentRepository disputeCommentRepository, DisputeLikeRepository disputeLikeRepository, WhisperRepository whisperRepository, UserRepository userRepository) {
+    public DisputeServiceImpl(DisputeRepository disputeRepository, DisputeCommentRepository disputeCommentRepository, DisputeLikeRepository disputeLikeRepository, WhisperRepository whisperRepository, DisputeTagRepository disputeTagRepository, UserRepository userRepository) {
         this.disputeRepository = disputeRepository;
         this.disputeCommentRepository = disputeCommentRepository;
         this.disputeLikeRepository = disputeLikeRepository;
         this.whisperRepository = whisperRepository;
+        this.disputeTagRepository = disputeTagRepository;
         this.userRepository = userRepository;
     }
 
@@ -53,6 +58,14 @@ public class DisputeServiceImpl implements DisputeService {
             disputeLike.setNumberDislike(0);
             disputeLike.setDispute(dispute);
             disputeLikeRepository.save(disputeLike);
+            if(!createDisputeRequest.tags().isEmpty()) {
+                DisputeTag disputeTag = new DisputeTag();
+                disputeTag.setTags(createDisputeRequest.tags());
+                disputeTag.setDispute(dispute);
+                disputeTagRepository.save(disputeTag);
+                dispute.setDisputeTag(disputeTag);
+                disputeRepository.save(dispute);
+            }
 
         }
         catch (Exception e) {
@@ -88,6 +101,8 @@ public class DisputeServiceImpl implements DisputeService {
     public Page<DisputeDTO> getAll(Pageable page) {
         Page<Dispute> disputes = disputeRepository.getAllDispute(page);
         int totalElements = 10;
+        Set<String> empty = new HashSet<>();
+
         return new PageImpl<DisputeDTO>(disputes.getContent()
                 .stream()
                 .map(dispute -> new DisputeDTO(
@@ -101,6 +116,7 @@ public class DisputeServiceImpl implements DisputeService {
                         dispute.getWhisper().getSource(),
                         dispute.getWhisper().getAuthorName(),
                         dispute.getWhisper().getImageURL(),
+                        dispute.getDisputeTag() == null ? empty : dispute.getDisputeTag().getTags(),
                         dispute.getDisputeComments().size()))
                 .collect(Collectors.toList()), page, totalElements);
     }
@@ -111,8 +127,8 @@ public class DisputeServiceImpl implements DisputeService {
             DisputeLike disputeLike = disputeLikeRepository.findById(disputeId).get();
             String securityName = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userRepository.findByUsername(securityName).get();
-            if(!disputeLike.getUsers().contains(user)) {
-                disputeLike.getUsers().add(user);
+            if(!disputeLike.getLikeUsers().contains(user) && !disputeLike.getDislikeUsers().contains(user)) {
+                disputeLike.getLikeUsers().add(user);
                 disputeLike.setNumberLike(disputeLike.getNumberLike()+1);
                 disputeLikeRepository.save(disputeLike);
                 return "Successfully liked";
@@ -132,14 +148,56 @@ public class DisputeServiceImpl implements DisputeService {
             DisputeLike disputeLike = disputeLikeRepository.findById(disputeId).get();
             String securityName = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userRepository.findByUsername(securityName).get();
-            if(!disputeLike.getUsers().contains(user)) {
-                disputeLike.getUsers().add(user);
+            if(!disputeLike.getDislikeUsers().contains(user) && !disputeLike.getLikeUsers().contains(user)) {
+                disputeLike.getDislikeUsers().add(user);
                 disputeLike.setNumberDislike(disputeLike.getNumberDislike()+1);
                 disputeLikeRepository.save(disputeLike);
                 return "Successfully disliked";
             }
             else {
                 return "User already disliked";
+            }
+        }
+        else {
+            throw new RuntimeException();
+        }
+    }
+
+    @Override
+    public String unLikeDispute(Long disputeId) {
+        if(disputeLikeRepository.existsById(disputeId)) {
+            DisputeLike disputeLike = disputeLikeRepository.findById(disputeId).get();
+            String securityName = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userRepository.findByUsername(securityName).get();
+            if(disputeLike.getLikeUsers().contains(user)) {
+                disputeLike.getLikeUsers().remove(user);
+                disputeLike.setNumberLike(disputeLike.getNumberLike()-1);
+                disputeLikeRepository.save(disputeLike);
+                return "Successfully unLiked";
+            }
+            else {
+                return "User already unLiked";
+            }
+        }
+        else {
+            throw new RuntimeException();
+        }
+    }
+
+    @Override
+    public String unDislikeDispute(Long disputeId) {
+        if(disputeLikeRepository.existsById(disputeId)) {
+            DisputeLike disputeLike = disputeLikeRepository.findById(disputeId).get();
+            String securityName = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userRepository.findByUsername(securityName).get();
+            if(disputeLike.getDislikeUsers().contains(user)) {
+                disputeLike.getDislikeUsers().remove(user);
+                disputeLike.setNumberDislike(disputeLike.getNumberDislike()-1);
+                disputeLikeRepository.save(disputeLike);
+                return "Successfully unDisliked";
+            }
+            else {
+                return "User already unDisliked";
             }
         }
         else {
@@ -176,5 +234,17 @@ public class DisputeServiceImpl implements DisputeService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Boolean controlLike(Long disputeId) {
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+        return disputeLikeRepository.controlLike(disputeId,user);
+    }
+
+    @Override
+    public Boolean controlDislike(Long disputeId) {
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+        return disputeLikeRepository.controlDislike(disputeId,user);
     }
 }

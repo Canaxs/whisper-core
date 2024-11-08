@@ -57,6 +57,21 @@ public class WhisperController {
         return ResponseEntity.ok(whisperService.likeWhisper(whisperId));
     }
 
+    @GetMapping("/locked/dislike/{whisperId}")
+    public ResponseEntity<String> dislikeWhisper(@PathVariable("whisperId") Long whisperId) {
+        return ResponseEntity.ok(whisperService.dislikeWhisper(whisperId));
+    }
+
+    @GetMapping("/locked/unlike/{whisperId}")
+    public ResponseEntity<String> unLikeWhisper(@PathVariable("whisperId") Long whisperId) {
+        return ResponseEntity.ok(whisperService.unLikeWhisper(whisperId));
+    }
+
+    @GetMapping("/locked/undislike/{whisperId}")
+    public ResponseEntity<String> unDislikeWhisper(@PathVariable("whisperId") Long whisperId) {
+        return ResponseEntity.ok(whisperService.unDislikeWhisper(whisperId));
+    }
+
     @PostMapping("/locked/viewsUpdate")
     public ResponseEntity<WhisperView> viewsUpdate(@RequestBody ViewsUpdateRequest viewsUpdate) {
         return ResponseEntity.ok(whisperService.viewsUpdate(viewsUpdate));
@@ -120,6 +135,11 @@ public class WhisperController {
     @GetMapping("/control/like/{whisperId}")
     public ResponseEntity<Boolean> controlLike(@PathVariable("whisperId") Long whisperId) {
         return ResponseEntity.ok(whisperService.controlLike(whisperId));
+    }
+
+    @GetMapping("/control/dislike/{whisperId}")
+    public ResponseEntity<Boolean> controlDislike(@PathVariable("whisperId") Long whisperId) {
+        return ResponseEntity.ok(whisperService.controlDislike(whisperId));
     }
 
     @GetMapping("/updateActive/{whisperId}")

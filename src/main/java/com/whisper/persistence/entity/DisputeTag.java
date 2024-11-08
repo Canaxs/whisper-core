@@ -1,10 +1,12 @@
 package com.whisper.persistence.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.whisper.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -12,22 +14,19 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DisputeComment {
+public class DisputeTag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    @Size(min=2,max=255)
-    @NotNull
-    private String comment;
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
+    @JoinTable(name = "dispute_tag_tags", joinColumns = @JoinColumn(name = "dispute_tag_id"))
+    @Column(name = "tags")
+    private Set<String> tags;
 
     @ManyToOne
     @NotNull
-    private User user;
-
-    @ManyToOne
     @JsonIgnore
-    @NotNull
     private Dispute dispute;
 }

@@ -21,6 +21,12 @@ public interface WhisperService {
     String deleteWhisper(Long whisperId);
     Page<Whisper> getCategoryWhispers(String categoryName, Pageable page);
     String likeWhisper(Long whisperId);
+
+    String dislikeWhisper(Long whisperId);
+
+    String unLikeWhisper(Long whisperId);
+
+    String unDislikeWhisper(Long whisperId);
     WhisperView viewsUpdate(ViewsUpdateRequest viewsUpdate);
 
     WhisperComment commentCreate(CommentDTO commentDTO);
@@ -45,6 +51,8 @@ public interface WhisperService {
     List<WhisperDTO> getCarouselSmall();
 
     Boolean controlLike(Long whisperId);
+
+    Boolean controlDislike(Long whisperId);
 
     Boolean updateIsActive(Long whisperId);
 

@@ -25,7 +25,15 @@ public interface DisputeService {
 
     String dislikeDispute(Long disputeId);
 
+    String unLikeDispute(Long disputeId);
+
+    String unDislikeDispute(Long disputeId);
+
     DisputeComment createComment(DisputeCommentDTO disputeCommentDTO);
 
     Boolean deleteComment(DisputeCommentDeleteRequest commentDeleteRequest);
+
+    Boolean controlLike(Long disputeId);
+
+    Boolean controlDislike(Long disputeId);
 }
