@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.springframework.context.annotation.Lazy;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -30,6 +31,7 @@ public class Dispute extends BaseEntity {
     private Whisper whisper;
 
     @OneToMany
+    @Lazy
     @JoinTable(name = "dispute_comment_set", joinColumns = @JoinColumn(name = "dispute_id"), inverseJoinColumns = @JoinColumn(name = "dispute_comment_id"))
     private Set<DisputeComment> disputeComments = new HashSet<>();
 

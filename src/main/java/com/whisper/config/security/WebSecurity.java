@@ -53,7 +53,9 @@ public class WebSecurity {
                                 "/whisper/getId/**",
                                 "/whisper/getWhispersFilter/**",
                                 "/dispute/getDispute/**",
-                                "/dispute/getAll/**"
+                                "/dispute/getAll/**",
+                                "/dispute/getMostUsedTags/**",
+                                "/dispute/getDisputeTag/**"
                         ).permitAll()
                 ).authorizeHttpRequests(x ->
                         x.requestMatchers(

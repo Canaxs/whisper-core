@@ -1,13 +1,14 @@
 package com.whisper.service;
 
-import com.whisper.dto.CreateDisputeRequest;
-import com.whisper.dto.DisputeCommentDTO;
-import com.whisper.dto.DisputeCommentDeleteRequest;
-import com.whisper.dto.DisputeDTO;
+import com.whisper.dto.*;
 import com.whisper.persistence.entity.Dispute;
 import com.whisper.persistence.entity.DisputeComment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public interface DisputeService {
 
@@ -36,4 +37,8 @@ public interface DisputeService {
     Boolean controlLike(Long disputeId);
 
     Boolean controlDislike(Long disputeId);
+
+    List<TagsDTO> getMostUsedTags();
+
+    List<GetDisputeDTO> getDisputeTag(String disputeTag);
 }

@@ -12,8 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -246,5 +245,24 @@ public class DisputeServiceImpl implements DisputeService {
     public Boolean controlDislike(Long disputeId) {
         User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
         return disputeLikeRepository.controlDislike(disputeId,user);
+    }
+
+    @Override
+    public List<TagsDTO> getMostUsedTags() {
+        Calendar interimDate = Calendar.getInstance();
+        interimDate.add(Calendar.DATE , -7);
+
+        Calendar interimDate2 = Calendar.getInstance();
+        interimDate2.add(Calendar.DATE , -15);
+
+        Calendar interimDate3 = Calendar.getInstance();
+        interimDate3.add(Calendar.DATE , -30);
+
+        return disputeRepository.getMostUsedTags(interimDate.getTime(),interimDate2.getTime(),interimDate3.getTime());
+    }
+
+    @Override
+    public List<GetDisputeDTO> getDisputeTag(String disputeTag) {
+        return disputeRepository.getDisputeTags(disputeTag);
     }
 }

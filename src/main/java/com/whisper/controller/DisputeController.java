@@ -1,9 +1,6 @@
 package com.whisper.controller;
 
-import com.whisper.dto.CreateDisputeRequest;
-import com.whisper.dto.DisputeCommentDTO;
-import com.whisper.dto.DisputeCommentDeleteRequest;
-import com.whisper.dto.DisputeDTO;
+import com.whisper.dto.*;
 import com.whisper.persistence.entity.Dispute;
 import com.whisper.persistence.entity.DisputeComment;
 import com.whisper.service.DisputeService;
@@ -11,6 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/dispute")
@@ -86,6 +86,16 @@ public class DisputeController {
     @GetMapping("/control/dislike/{disputeId}")
     public ResponseEntity<Boolean> controlDislike(@PathVariable("disputeId") Long disputeId) {
         return ResponseEntity.ok(disputeService.controlDislike(disputeId));
+    }
+
+    @GetMapping("/getMostUsedTags")
+    public ResponseEntity<List<TagsDTO>> getMostUsedTags() {
+        return ResponseEntity.ok(disputeService.getMostUsedTags());
+    }
+
+    @GetMapping("/getDisputeTag/{disputeTag}")
+    public ResponseEntity<List<GetDisputeDTO>> getDisputeTag(@PathVariable("disputeTag") String disputeTag) {
+        return ResponseEntity.ok(disputeService.getDisputeTag(disputeTag));
     }
 
 }
