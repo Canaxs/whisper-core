@@ -40,17 +40,12 @@ public class WhisperServiceImpl implements WhisperService {
 
     private final UserAndPointRepository userAndPointRepository;
 
+
     @Value("${imgbb.key}")
     private String imgBBKey;
 
     @Value("${imgbb.uploadURL}")
     private String imgBBUploadURL;
-
-    @Value("${whisper.like.factor}")
-    private Double likeFactor;
-
-    @Value("${whisper.dislike.factor}")
-    private Double dislikeFactor;
 
 
     public WhisperServiceImpl(WhisperRepository whisperRepository, WhisperLikeRepository whisperLikeRepository, WhisperViewRepository whisperViewRepository, UserRepository userRepository, WhisperCommentRepository whisperCommentRepository, UserAndPointRepository userAndPointRepository) {
