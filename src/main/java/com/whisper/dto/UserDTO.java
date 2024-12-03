@@ -10,6 +10,6 @@ import java.util.Set;
 @Data
 public class UserDTO {
     private String username;
-    private Integer userPoint;
+    private Double userPoint;
     private String authorities;
 }

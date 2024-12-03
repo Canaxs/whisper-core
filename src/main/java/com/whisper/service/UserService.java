@@ -43,7 +43,7 @@ public class UserService implements UserDetailsService {
                 .username(request.username())
                 .password(passwordEncoder.encode(request.password()))
                 .authorities(request.authorities())
-                .userPoint(0)
+                .userPoint((double) 0)
                 .accountNonExpired(true)
                 .credentialsNonExpired(true)
                 .isEnabled(true)

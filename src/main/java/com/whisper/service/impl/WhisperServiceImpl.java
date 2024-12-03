@@ -38,19 +38,28 @@ public class WhisperServiceImpl implements WhisperService {
     private final UserRepository userRepository;
     private final WhisperCommentRepository whisperCommentRepository;
 
+    private final UserAndPointRepository userAndPointRepository;
+
     @Value("${imgbb.key}")
     private String imgBBKey;
 
     @Value("${imgbb.uploadURL}")
     private String imgBBUploadURL;
 
+    @Value("${whisper.like.factor}")
+    private Double likeFactor;
 
-    public WhisperServiceImpl(WhisperRepository whisperRepository, WhisperLikeRepository whisperLikeRepository, WhisperViewRepository whisperViewRepository, UserRepository userRepository, WhisperCommentRepository whisperCommentRepository) {
+    @Value("${whisper.dislike.factor}")
+    private Double dislikeFactor;
+
+
+    public WhisperServiceImpl(WhisperRepository whisperRepository, WhisperLikeRepository whisperLikeRepository, WhisperViewRepository whisperViewRepository, UserRepository userRepository, WhisperCommentRepository whisperCommentRepository, UserAndPointRepository userAndPointRepository) {
         this.whisperRepository = whisperRepository;
         this.whisperLikeRepository = whisperLikeRepository;
         this.whisperViewRepository = whisperViewRepository;
         this.userRepository = userRepository;
         this.whisperCommentRepository = whisperCommentRepository;
+        this.userAndPointRepository = userAndPointRepository;
     }
 
 
@@ -73,8 +82,8 @@ public class WhisperServiceImpl implements WhisperService {
         whisper.setUrlName(createUrlName(whisper.getTitle()));
         try {
             WhisperLike whisperLike = new WhisperLike();
-            whisperLike.setNumberLike(0);
-            whisperLike.setNumberDislike(0);
+            whisperLike.setNumberLike((double) 0);
+            whisperLike.setNumberDislike((double) 0);
             whisperLike.setWhisper(whisper);
             whisperLikeRepository.save(whisperLike);
             WhisperView whisperView = new WhisperView();
@@ -130,7 +139,23 @@ public class WhisperServiceImpl implements WhisperService {
             if(!whisperLike.getLikeUsers().contains(user) && !whisperLike.getDislikeUsers().contains(user)) {
                 whisperLike.getLikeUsers().add(user);
                 whisperLike.setNumberLike(whisperLike.getNumberLike()+1);
+                //
+                UserAndPoint userAndPoint = new UserAndPoint();
+                userAndPoint.setUser(user);
+                Whisper whisper = whisperRepository.findById(whisperId).get();
+                userAndPoint.setWhisper(whisper);
+                Double scorePoint = scoreCalculation(user,whisper);
+                userAndPoint.setPoint(scorePoint);
+                userAndPointRepository.save(userAndPoint);
+                //
+                user.setUserPoint(user.getUserPoint()+scorePoint);
+                userRepository.save(user);
+                //
+                whisperLike.getUserPoints().add(userAndPoint);
+                //
                 whisperLikeRepository.save(whisperLike);
+
+
                 return "Successfully liked";
             }
             else {
@@ -172,7 +197,18 @@ public class WhisperServiceImpl implements WhisperService {
             if(whisperLike.getLikeUsers().contains(user)) {
                 whisperLike.getLikeUsers().remove(user);
                 whisperLike.setNumberLike(whisperLike.getNumberLike()-1);
+
+                Whisper whisper = whisperRepository.findById(whisperId).get();
+                UserAndPoint userAndPoint = userAndPointRepository.getUserAndPointByWhisperAndUser(user,whisper);
+
+                user.setUserPoint(user.getUserPoint() - userAndPoint.getPoint());
+                userRepository.save(user);
+
+                whisperLike.getUserPoints().remove(userAndPoint);
+
                 whisperLikeRepository.save(whisperLike);
+                userAndPointRepository.delete(userAndPoint);
+
                 return "Successfully unliked";
             }
             else {
@@ -434,5 +470,112 @@ public class WhisperServiceImpl implements WhisperService {
                 .replace('ı','i')
                 .replace('ö','o')
                 .replace('ç','c');
+    }
+
+    private Double scoreCalculation(User user, Whisper whisper) {
+        Integer whisperCount = whisperRepository.getByWhisperCount(user.getUsername());
+        Integer whisperLikeCount = whisperRepository.getByWhispersLikeCount(user.getUsername());
+        double s1,s2,s3;
+        // s1
+        if (whisperCount <= 5) {
+            s1 = 9;
+        } else if (whisperCount <= 10) {
+            s1 = 8;
+        } else if (whisperCount <= 15) {
+            s1 = 7;
+        } else if (whisperCount <= 20) {
+            s1 = 6;
+        } else if (whisperCount <= 25) {
+            s1 = 5;
+        } else if (whisperCount <= 35) {
+            s1 = 4;
+        } else if (whisperCount <= 45) {
+            s1 = 3;
+        } else if (whisperCount <= 60) {
+            s1 = 2;
+        } else {
+            s1 = 1;
+        }
+
+        // s2
+
+        if (whisperLikeCount <= 50) {
+            s2 = 9;
+        } else if (whisperLikeCount <= 100) {
+            s2 = 8;
+        } else if (whisperLikeCount <= 200) {
+            s2 = 7;
+        } else if (whisperLikeCount <= 300) {
+            s2 = 6;
+        } else if (whisperLikeCount <= 400) {
+            s2 = 5;
+        } else if (whisperLikeCount <= 800) {
+            s2 = 4;
+        } else if (whisperLikeCount <= 1000) {
+            s2 = 3;
+        } else if (whisperLikeCount <= 2000) {
+            s2 = 2;
+        } else {
+            s2 = 1;
+        }
+
+        // s3
+        Calendar nowDate = Calendar.getInstance();
+        Calendar whisperDate = Calendar.getInstance();
+        whisperDate.setTime(whisper.getCreatedDate());
+        whisperDate.add(Calendar.HOUR, 1);
+
+        if (nowDate.getTime().compareTo(whisperDate.getTime()) < 0) {
+            s3 = 9;
+        }
+        else {
+            whisperDate.add(Calendar.HOUR, 2);
+            if(nowDate.getTime().compareTo(whisperDate.getTime()) < 0) {
+                s3 = 8;
+            }
+            else {
+                whisperDate.add(Calendar.HOUR, 5);
+                if(nowDate.getTime().compareTo(whisperDate.getTime()) < 0) {
+                    s3 = 7;
+                }
+                else {
+                    whisperDate.add(Calendar.DATE, 1);
+                    if(nowDate.getTime().compareTo(whisperDate.getTime()) < 0) {
+                        s3 = 6;
+                    }
+                    else {
+                        whisperDate.add(Calendar.DATE, 2);
+                        if(nowDate.getTime().compareTo(whisperDate.getTime()) < 0) {
+                            s3 = 5;
+                        }
+                        else {
+                            whisperDate.add(Calendar.DATE, 3);
+                            if(nowDate.getTime().compareTo(whisperDate.getTime()) < 0) {
+                                s3 = 4;
+                            }
+                            else {
+                                whisperDate.add(Calendar.DATE, 3);
+                                if(nowDate.getTime().compareTo(whisperDate.getTime()) < 0) {
+                                    s3 = 3;
+                                }
+                                else {
+                                    whisperDate.add(Calendar.DATE, 15);
+                                    if(nowDate.getTime().compareTo(whisperDate.getTime()) < 0) {
+                                        s3 = 2;
+                                    }
+                                    else {
+                                        s3 = 1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        double total = 0;
+        total = (s1+s2+s3) / 3;
+        return total;
     }
 }

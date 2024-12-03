@@ -14,6 +14,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -27,6 +28,12 @@ public interface WhisperRepository extends JpaRepository<Whisper, Long> , JpaSpe
 
     @Query("SELECT Id FROM Whisper order by Id desc limit 1")
     Long getByIdNumber();
+
+    @Query("SELECT COUNT(*) FROM Whisper w where w.authorName = :authorName")
+    Integer getByWhisperCount(@Param("authorName") String authorName);
+
+    @Query("SELECT SUM(w.whisperLike.numberLike) FROM Whisper w where w.authorName = :authorName")
+    Integer getByWhispersLikeCount(@Param("authorName") String authorName);
 
     @Query("SELECT "
             + " new com.whisper.dto.WhisperPanelDTO("

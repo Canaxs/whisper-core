@@ -32,7 +32,7 @@ public class User implements UserDetails {
     private String password;
 
     @Column (nullable = false)
-    private Integer userPoint;
+    private Double userPoint;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @JoinTable(name = "authorities", joinColumns = @JoinColumn(name = "user_id"))
