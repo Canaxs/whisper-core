@@ -525,6 +525,7 @@ public class WhisperServiceImpl implements WhisperService {
         whisperDate.setTime(whisper.getCreatedDate());
         whisperDate.add(Calendar.HOUR, 1);
 
+        
         if (nowDate.getTime().compareTo(whisperDate.getTime()) < 0) {
             s3 = 9;
         }
