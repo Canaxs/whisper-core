@@ -138,13 +138,14 @@ public class WhisperServiceImpl implements WhisperService {
                 UserAndPoint userAndPoint = new UserAndPoint();
                 userAndPoint.setUser(user);
                 Whisper whisper = whisperRepository.findById(whisperId).get();
+                User author = userRepository.findByUsername(whisper.getAuthorName()).get();
                 userAndPoint.setWhisper(whisper);
-                Double scorePoint = scoreCalculation(user,whisper);
+                Double scorePoint = scoreCalculation(author,whisper);
                 userAndPoint.setPoint(scorePoint);
                 userAndPointRepository.save(userAndPoint);
                 //
-                user.setUserPoint(user.getUserPoint()+scorePoint);
-                userRepository.save(user);
+                author.setUserPoint(author.getUserPoint()+scorePoint);
+                userRepository.save(author);
                 //
                 whisperLike.getUserPoints().add(userAndPoint);
                 //
@@ -196,7 +197,8 @@ public class WhisperServiceImpl implements WhisperService {
                 Whisper whisper = whisperRepository.findById(whisperId).get();
                 UserAndPoint userAndPoint = userAndPointRepository.getUserAndPointByWhisperAndUser(user,whisper);
 
-                user.setUserPoint(user.getUserPoint() - userAndPoint.getPoint());
+                User author = userRepository.findByUsername(whisper.getAuthorName()).get();
+                author.setUserPoint(author.getUserPoint() - userAndPoint.getPoint());
                 userRepository.save(user);
 
                 whisperLike.getUserPoints().remove(userAndPoint);
