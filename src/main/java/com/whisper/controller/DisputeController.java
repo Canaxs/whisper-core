@@ -4,6 +4,7 @@ import com.whisper.dto.*;
 import com.whisper.persistence.entity.Dispute;
 import com.whisper.persistence.entity.DisputeComment;
 import com.whisper.service.DisputeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.Map;
 @CrossOrigin(origins = "*")
 public class DisputeController {
 
+    @Autowired
     private final DisputeService disputeService;
 
     public DisputeController(DisputeService disputeService) {

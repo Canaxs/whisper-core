@@ -6,6 +6,7 @@ import com.whisper.persistence.entity.WhisperComment;
 import com.whisper.persistence.entity.WhisperView;
 import com.whisper.service.WhisperService;
 import com.whisper.specification.WhisperFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class WhisperController {
 
+    @Autowired
     private final WhisperService whisperService;
 
     public WhisperController(WhisperService whisperService) {
