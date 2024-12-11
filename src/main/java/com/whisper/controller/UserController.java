@@ -1,8 +1,6 @@
 package com.whisper.controller;
 
-import com.whisper.dto.CreateUserRequest;
-import com.whisper.dto.RoleDTO;
-import com.whisper.dto.UserDTO;
+import com.whisper.dto.*;
 import com.whisper.persistence.entity.User;
 import com.whisper.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +31,17 @@ public class UserController {
     public ResponseEntity<UserDTO> getUsername(@PathVariable("username") String username) {
         return ResponseEntity.ok(userService.getUsername(username));
     }
+
+    @PostMapping("/updatePlan")
+    public ResponseEntity<User> updatePlan(@RequestBody UpdatePlanReq updatePlanReq) {
+        return ResponseEntity.ok(userService.updatePlan(updatePlanReq));
+    }
+
+    @PostMapping("/updateUser")
+    public ResponseEntity<User> updateUser(@RequestBody UpdateUserReq updateUserReq) {
+        return ResponseEntity.ok(userService.updateUser(updateUserReq));
+    }
+
     @DeleteMapping("/delete/{userId}")
     @PreAuthorize("hasRole('ROLE_MOD')")
     public ResponseEntity<User> deleteUser(@PathVariable("userId") Long userId) {

@@ -82,7 +82,9 @@ public class WebSecurity {
                                 "/dispute/unlike/**",
                                 "/dispute/undislike/**",
                                 "/dispute/createComment/**",
-                                "/dispute/deleteComment/**"
+                                "/dispute/deleteComment/**",
+                                "/user/updatePlan/**",
+                                "/user/updateUser/**"
                         ).authenticated()
                 )
                 .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

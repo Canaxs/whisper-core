@@ -1,12 +1,14 @@
 package com.whisper.service;
 
-import com.whisper.dto.CreateUserRequest;
-import com.whisper.dto.UserDTO;
-import com.whisper.dto.UsersDTO;
+import com.whisper.dto.*;
+import com.whisper.enums.Package;
 import com.whisper.enums.Role;
+import com.whisper.persistence.entity.Subscription;
 import com.whisper.persistence.entity.User;
+import com.whisper.persistence.repository.SubscriptionRepository;
 import com.whisper.persistence.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,10 +21,12 @@ import java.util.*;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final SubscriptionRepository subscriptionRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, SubscriptionRepository subscriptionRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.subscriptionRepository = subscriptionRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -134,5 +138,27 @@ public class UserService implements UserDetailsService {
             roles.add(Role.ROLE_USER);
         }
         return userRepository.save(user);
+    }
+
+    public User updatePlan(UpdatePlanReq updatePlanReq) {
+        User user;
+        try {
+            user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+            Subscription subscription = Package.convert(updatePlanReq.getPlanName());
+            if(subscription.getPlanName() != null) {
+                subscription.setUser(user);
+                subscriptionRepository.save(subscription);
+                user.setSubscription(subscription);
+                userRepository.save(user);
+            }
+        }
+        catch (Exception e) {
+            throw new RuntimeException();
+        }
+        return user;
+    }
+
+    public User updateUser(UpdateUserReq updateUserReq) {
+        return null;
     }
 }
