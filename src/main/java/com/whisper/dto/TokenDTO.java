@@ -7,5 +7,6 @@ public record TokenDTO (
         String token,
         String username,
         String userPoint,
-        String role
+        String role,
+        Boolean isSubscribe
 ){}

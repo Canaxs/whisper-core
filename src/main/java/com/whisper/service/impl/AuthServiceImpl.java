@@ -33,6 +33,7 @@ public class AuthServiceImpl implements AuthService {
                 .role(user.getAuthorities().toString())
                 .userPoint(user.getUserPoint().toString())
                 .username(user.getUsername())
+                .isSubscribe(user.getSubscription() != null)
                 .build();
     }
 
