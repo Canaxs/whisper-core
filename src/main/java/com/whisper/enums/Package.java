@@ -17,24 +17,28 @@ public enum Package {
                 subscription.setExclusive(false);
                 subscription.setEarning(false);
                 subscription.setWriteLimit(5);
+                subscription.setWriteLimitDef(5);
                 break;
             case "BASIC":
                 subscription.setPlanName(step.toUpperCase());
                 subscription.setExclusive(false);
                 subscription.setEarning(true);
                 subscription.setWriteLimit(10);
+                subscription.setWriteLimitDef(10);
                 break;
             case "STANDARD":
                 subscription.setPlanName(step.toUpperCase());
                 subscription.setExclusive(false);
                 subscription.setEarning(true);
                 subscription.setWriteLimit(30);
+                subscription.setWriteLimitDef(30);
                 break;
             case "PREMIUM":
                 subscription.setPlanName(step.toUpperCase());
                 subscription.setExclusive(true);
                 subscription.setEarning(true);
                 subscription.setWriteLimit(1000);
+                subscription.setWriteLimitDef(1000);
                 break;
         };
         return subscription;

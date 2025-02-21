@@ -7,8 +7,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.*;
 
-@Data
-@EqualsAndHashCode(callSuper = false)
+@Getter
+@Setter
 @Entity
 @Builder
 @NoArgsConstructor
@@ -22,6 +22,8 @@ public class Subscription extends BaseEntity {
     private User user;
 
     private Integer writeLimit;
+
+    private Integer writeLimitDef;
 
     private Boolean earning;
 

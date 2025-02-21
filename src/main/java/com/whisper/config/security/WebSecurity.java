@@ -84,7 +84,9 @@ public class WebSecurity {
                                 "/dispute/createComment/**",
                                 "/dispute/deleteComment/**",
                                 "/user/updatePlan/**",
-                                "/user/updateUser/**"
+                                "/user/updateUser/**",
+                                "/user/getSubscribe/**",
+                                "/user/writeLimitDrop/**"
                         ).authenticated()
                 )
                 .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

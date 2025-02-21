@@ -1,5 +1,6 @@
 package com.whisper.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.whisper.enums.Category;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -45,6 +46,7 @@ public class Whisper extends BaseEntity {
     private Boolean isDelete;
 
     @OneToOne(mappedBy = "whisper")
+    @JsonIgnore
     private WhisperLike whisperLike;
 
     @OneToOne(mappedBy = "whisper")

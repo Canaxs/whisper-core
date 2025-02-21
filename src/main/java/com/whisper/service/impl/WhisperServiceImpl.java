@@ -127,8 +127,9 @@ public class WhisperServiceImpl implements WhisperService {
 
     @Override
     public String likeWhisper(Long whisperId) {
-        if(whisperLikeRepository.existsById(whisperId)) {
-            WhisperLike whisperLike = whisperLikeRepository.getReferenceById(whisperId);
+        if(whisperRepository.existsById(whisperId)) {
+            Whisper whisper = whisperRepository.findById(whisperId).get();
+            WhisperLike whisperLike = whisperLikeRepository.findById(whisper.getWhisperLike().getId()).get();
             String securityName = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userRepository.findByUsername(securityName).get();
             if(!whisperLike.getLikeUsers().contains(user) && !whisperLike.getDislikeUsers().contains(user)) {
@@ -137,7 +138,6 @@ public class WhisperServiceImpl implements WhisperService {
                 //
                 UserAndPoint userAndPoint = new UserAndPoint();
                 userAndPoint.setUser(user);
-                Whisper whisper = whisperRepository.findById(whisperId).get();
                 User author = userRepository.findByUsername(whisper.getAuthorName()).get();
                 userAndPoint.setWhisper(whisper);
                 Double scorePoint = scoreCalculation(author,whisper);

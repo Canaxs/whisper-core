@@ -1,7 +1,9 @@
 package com.whisper.controller;
 
 import com.whisper.dto.*;
+import com.whisper.persistence.entity.Subscription;
 import com.whisper.persistence.entity.User;
+import com.whisper.service.SubscriptionService;
 import com.whisper.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,8 +18,11 @@ public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    private final SubscriptionService subscriptionService;
+
+    public UserController(UserService userService, SubscriptionService subscriptionService) {
         this.userService = userService;
+        this.subscriptionService = subscriptionService;
     }
     @PostMapping("/createUser")
     public ResponseEntity<User> createUser(@RequestBody CreateUserRequest createUserRequest) {
@@ -64,5 +69,15 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_MOD')")
     public ResponseEntity<User> updateRole(@RequestBody RoleDTO roleDTO) {
         return ResponseEntity.ok(userService.updateAuthorities(roleDTO.getUserId(), roleDTO.getRole()));
+    }
+
+    @GetMapping("/getSubscribe")
+    public ResponseEntity<Subscription> getSubscribe() {
+        return ResponseEntity.ok(subscriptionService.getSubscribe());
+    }
+
+    @PutMapping("/writeLimitDrop")
+    public ResponseEntity<Boolean> writeLimitDrop() {
+        return ResponseEntity.ok(subscriptionService.writeLimitDrop());
     }
 }
