@@ -20,7 +20,7 @@ public class DisputeTag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = String.class)
     @JoinTable(name = "dispute_tag_tags", joinColumns = @JoinColumn(name = "dispute_tag_id"))
     @Column(name = "tags")
     private Set<String> tags;
