@@ -20,12 +20,12 @@ public class DisputeTag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    @ElementCollection(targetClass = String.class)
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
     @JoinTable(name = "dispute_tag_tags", joinColumns = @JoinColumn(name = "dispute_tag_id"))
     @Column(name = "tags")
     private Set<String> tags;
 
-    @ManyToOne
+    @OneToOne
     @NotNull
     @JsonIgnore
     private Dispute dispute;
