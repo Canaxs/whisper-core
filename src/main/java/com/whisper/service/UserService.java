@@ -95,6 +95,7 @@ public class UserService implements UserDetailsService {
                     .username(user.getUsername())
                     .userPoint(user.getUserPoint())
                     .authorities(getSupremeAuthority(user.getAuthorities()))
+                    .badges(user.getBadges())
                     .build();
     }
 

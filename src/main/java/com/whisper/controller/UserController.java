@@ -1,15 +1,19 @@
 package com.whisper.controller;
 
 import com.whisper.dto.*;
+import com.whisper.persistence.entity.BadgeEntity;
 import com.whisper.persistence.entity.Subscription;
 import com.whisper.persistence.entity.User;
+import com.whisper.service.BadgeService;
 import com.whisper.service.SubscriptionService;
 import com.whisper.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/user")
@@ -20,9 +24,12 @@ public class UserController {
 
     private final SubscriptionService subscriptionService;
 
-    public UserController(UserService userService, SubscriptionService subscriptionService) {
+    private final BadgeService badgeService;
+
+    public UserController(UserService userService, SubscriptionService subscriptionService, BadgeService badgeService) {
         this.userService = userService;
         this.subscriptionService = subscriptionService;
+        this.badgeService = badgeService;
     }
     @PostMapping("/createUser")
     public ResponseEntity<User> createUser(@RequestBody CreateUserRequest createUserRequest) {
@@ -76,8 +83,40 @@ public class UserController {
         return ResponseEntity.ok(subscriptionService.getSubscribe());
     }
 
-    @PutMapping("/writeLimitDrop")
+    @GetMapping("/writeLimitDrop")
     public ResponseEntity<Boolean> writeLimitDrop() {
         return ResponseEntity.ok(subscriptionService.writeLimitDrop());
     }
+
+    @PostMapping("/createBadge")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<BadgeEntity> createBadge(@RequestPart("badgeCreateRequest") BadgeCreateRequest badgeCreateRequest,
+                                                   @RequestPart("image") MultipartFile imageFile) {
+        return ResponseEntity.ok(badgeService.createBadge(imageFile,badgeCreateRequest));
+    }
+
+    @PostMapping("/addBadge")
+    @PreAuthorize("hasRole('ROLE_MOD')")
+    public ResponseEntity<User> addBadge(@RequestBody UserBadgeAddRequest userBadgeAddRequest) {
+        return ResponseEntity.ok(badgeService.addBadge(userBadgeAddRequest));
+    }
+
+    @DeleteMapping("/deleteBadge")
+    @PreAuthorize("hasRole('ROLE_MOD')")
+    public ResponseEntity<User> deleteBadge(@RequestBody UserBadgeAddRequest userBadgeAddRequest) {
+        return ResponseEntity.ok(badgeService.deleteBadge(userBadgeAddRequest));
+    }
+
+    @GetMapping("/allBadges")
+    @PreAuthorize("hasRole('ROLE_MOD')")
+    public ResponseEntity<List<BadgeEntity>> allBadges() {
+        return ResponseEntity.ok(badgeService.getAll());
+    }
+
+    @GetMapping("/getUserBadges/{username}")
+    public ResponseEntity<Set<BadgeEntity>> getUserBadges(@PathVariable("username") String username) {
+        return ResponseEntity.ok(badgeService.getUserBadges(username));
+    }
+
+
 }

@@ -55,7 +55,8 @@ public class WebSecurity {
                                 "/dispute/getDispute/**",
                                 "/dispute/getAll/**",
                                 "/dispute/getMostUsedTags/**",
-                                "/dispute/getDisputeTag/**"
+                                "/dispute/getDisputeTag/**",
+                                "/user/getUserBadges/**"
                         ).permitAll()
                 ).authorizeHttpRequests(x ->
                         x.requestMatchers(
@@ -86,7 +87,8 @@ public class WebSecurity {
                                 "/user/updatePlan/**",
                                 "/user/updateUser/**",
                                 "/user/getSubscribe/**",
-                                "/user/writeLimitDrop/**"
+                                "/user/writeLimitDrop/**",
+                                "/user/allBadges"
                         ).authenticated()
                 )
                 .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

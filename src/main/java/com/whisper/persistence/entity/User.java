@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Data
@@ -36,6 +37,10 @@ public class User implements UserDetails {
 
     @OneToOne
     private Subscription subscription;
+
+    @ManyToMany
+    @JoinTable(name = "user_badges_entity",joinColumns = @JoinColumn(name = "user_id") , inverseJoinColumns = @JoinColumn(name = "badge_entity_id"))
+    private Set<BadgeEntity> badges = new LinkedHashSet<>();
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @JoinTable(name = "authorities", joinColumns = @JoinColumn(name = "user_id"))

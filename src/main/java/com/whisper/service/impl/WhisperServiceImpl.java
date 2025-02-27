@@ -60,36 +60,42 @@ public class WhisperServiceImpl implements WhisperService {
 
     @Override
     public Whisper createWhisper(WhisperRequest whisperRequest, MultipartFile imageFile) {
-        String imageURL = null;
-        if(!imageFile.isEmpty()){
-             imageURL = uploadImgBB(imageFile);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User securityUser = userRepository.findByUsername(username).get();
+        if(securityUser.getSubscription().getWriteLimit() != 0) {
+            String imageURL = null;
+            if (!imageFile.isEmpty()) {
+                imageURL = uploadImgBB(imageFile);
+            }
+            Whisper whisper = Whisper.builder()
+                    .authorName(username)
+                    .title(whisperRequest.title())
+                    .imageURL(imageURL)
+                    .description(whisperRequest.description())
+                    .source(whisperRequest.source())
+                    .isActive(false)
+                    .isDelete(false)
+                    .category(Category.convert(whisperRequest.category().toUpperCase()))
+                    .build();
+            whisper.setUrlName(createUrlName(whisper.getTitle()));
+            try {
+                WhisperLike whisperLike = new WhisperLike();
+                whisperLike.setNumberLike((double) 0);
+                whisperLike.setNumberDislike((double) 0);
+                whisperLike.setWhisper(whisper);
+                whisperLikeRepository.save(whisperLike);
+                WhisperView whisperView = new WhisperView();
+                whisperView.setWhisper(whisper);
+                whisperView.setNumberOfViews(0L);
+                whisperViewRepository.save(whisperView);
+            } catch (Exception e) {
+                throw new RuntimeException();
+            }
+            return whisperRepository.save(whisper);
         }
-        Whisper whisper = Whisper.builder()
-                .authorName(SecurityContextHolder.getContext().getAuthentication().getName())
-                .title(whisperRequest.title())
-                .imageURL(imageURL)
-                .description(whisperRequest.description())
-                .source(whisperRequest.source())
-                .isActive(false)
-                .isDelete(false)
-                .category(Category.convert(whisperRequest.category().toUpperCase()))
-                .build();
-        whisper.setUrlName(createUrlName(whisper.getTitle()));
-        try {
-            WhisperLike whisperLike = new WhisperLike();
-            whisperLike.setNumberLike((double) 0);
-            whisperLike.setNumberDislike((double) 0);
-            whisperLike.setWhisper(whisper);
-            whisperLikeRepository.save(whisperLike);
-            WhisperView whisperView = new WhisperView();
-            whisperView.setWhisper(whisper);
-            whisperView.setNumberOfViews(0L);
-            whisperViewRepository.save(whisperView);
+        else {
+            return null;
         }
-        catch (Exception e) {
-            throw new RuntimeException();
-        }
-        return whisperRepository.save(whisper);
     }
 
     @Override
@@ -573,7 +579,14 @@ public class WhisperServiceImpl implements WhisperService {
         }
 
         double total = 0;
-        total = (s1+s2+s3) / 3;
+        double exclusive = 0;
+
+        if(user.getSubscription().getExclusive()) {
+            exclusive+=3;
+        }
+
+        total = ( (s1+s2+s3) + exclusive ) / 3;
+
         return total;
     }
 }

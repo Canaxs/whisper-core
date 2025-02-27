@@ -1,6 +1,6 @@
 package com.whisper.dto;
 
-import com.whisper.enums.Role;
+import com.whisper.persistence.entity.BadgeEntity;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,4 +12,5 @@ public class UserDTO {
     private String username;
     private Double userPoint;
     private String authorities;
+    private Set<BadgeEntity> badges;
 }
