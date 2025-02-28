@@ -59,7 +59,7 @@ public class NotificationServiceImpl implements NotificationService {
     public NotificationDTO getUserNotifications() {
         User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).get();
         return NotificationDTO.builder()
-                .notificationList(notificationRepository.getAllByUser(user))
+                .notificationList(notificationRepository.getAllByUserOrderByIdDesc(user))
                 .unReadNotify(notificationRepository.getIsReads(user))
                 .build();
     }

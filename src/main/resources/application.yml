@@ -4,7 +4,7 @@ server:
 
 spring:
   profiles:
-    active: prod
+    active: ${PROFILE_ACTIVE}
   jpa:
     show-sql: false
   servlet:

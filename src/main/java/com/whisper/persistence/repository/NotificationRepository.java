@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification , Long> {
 
-    List<Notification> getAllByUser(User user);
+    List<Notification> getAllByUserOrderByIdDesc(User user);
 
     @Query("SELECT COUNT(*) FROM Notification n WHERE n.isRead = false AND n.user =:user ")
     Integer getIsReads(@Param("user") User user);
