@@ -88,7 +88,8 @@ public class WebSecurity {
                                 "/user/updateUser/**",
                                 "/user/getSubscribe/**",
                                 "/user/writeLimitDrop/**",
-                                "/user/allBadges"
+                                "/user/allBadges",
+                                "/notify/**"
                         ).authenticated()
                 )
                 .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -6,6 +6,7 @@ import com.whisper.dto.*;
 import com.whisper.enums.Category;
 import com.whisper.persistence.entity.*;
 import com.whisper.persistence.repository.*;
+import com.whisper.service.NotificationService;
 import com.whisper.service.WhisperService;
 import com.whisper.specification.WhisperFilter;
 import com.whisper.specification.WhisperSpecification;
@@ -38,6 +39,8 @@ public class WhisperServiceImpl implements WhisperService {
     private final UserRepository userRepository;
     private final WhisperCommentRepository whisperCommentRepository;
 
+    private final NotificationService notificationService;
+
     private final UserAndPointRepository userAndPointRepository;
 
 
@@ -48,12 +51,13 @@ public class WhisperServiceImpl implements WhisperService {
     private String imgBBUploadURL;
 
 
-    public WhisperServiceImpl(WhisperRepository whisperRepository, WhisperLikeRepository whisperLikeRepository, WhisperViewRepository whisperViewRepository, UserRepository userRepository, WhisperCommentRepository whisperCommentRepository, UserAndPointRepository userAndPointRepository) {
+    public WhisperServiceImpl(WhisperRepository whisperRepository, WhisperLikeRepository whisperLikeRepository, WhisperViewRepository whisperViewRepository, UserRepository userRepository, WhisperCommentRepository whisperCommentRepository, NotificationService notificationService, UserAndPointRepository userAndPointRepository) {
         this.whisperRepository = whisperRepository;
         this.whisperLikeRepository = whisperLikeRepository;
         this.whisperViewRepository = whisperViewRepository;
         this.userRepository = userRepository;
         this.whisperCommentRepository = whisperCommentRepository;
+        this.notificationService = notificationService;
         this.userAndPointRepository = userAndPointRepository;
     }
 
@@ -88,6 +92,7 @@ public class WhisperServiceImpl implements WhisperService {
                 whisperView.setWhisper(whisper);
                 whisperView.setNumberOfViews(0L);
                 whisperViewRepository.save(whisperView);
+
             } catch (Exception e) {
                 throw new RuntimeException();
             }
@@ -157,6 +162,8 @@ public class WhisperServiceImpl implements WhisperService {
                 //
                 whisperLikeRepository.save(whisperLike);
 
+                String actionInfo = "Paylaşımınızı beğendi";
+                notificationService.create(securityName,actionInfo,author);
 
                 return "Successfully liked";
             }
@@ -262,13 +269,17 @@ public class WhisperServiceImpl implements WhisperService {
         if(whisperRepository.existsById(commentDTO.whisperId())) {
             Whisper whisper = whisperRepository.findById(commentDTO.whisperId()).get();
             String name = SecurityContextHolder.getContext().getAuthentication().getName();
+            User whisperUser = userRepository.findByUsername(name).get();
             WhisperComment whisperComment = new WhisperComment();
             whisperComment.setComment(commentDTO.comment());
             whisperComment.setWhisper(whisper);
-            whisperComment.setUser(userRepository.findByUsername(name).get());
+            whisperComment.setUser(whisperUser);
             whisperCommentRepository.save(whisperComment);
             whisper.getWhisperComment().add(whisperComment);
             whisperRepository.save(whisper);
+
+            String actionInfo = "Paylaşımınıza Yorum Yaptı.";
+            notificationService.create(name,actionInfo,whisperUser);
         }
         else {
             throw new RuntimeException();
@@ -398,6 +409,9 @@ public class WhisperServiceImpl implements WhisperService {
             whisper = whisperRepository.findById(whisperId).get();
             whisper.setIsActive(true);
             whisperRepository.save(whisper);
+
+            String actionInfo = "Başlıklı paylaşımınız onaylandı";
+            notificationService.create(whisper.getTitle(),actionInfo,userRepository.findByUsername(whisper.getAuthorName()).get());
             return true;
         }
         catch (Exception e) {
@@ -412,6 +426,9 @@ public class WhisperServiceImpl implements WhisperService {
             whisper = whisperRepository.findById(whisperId).get();
             whisper.setIsDelete(true);
             whisperRepository.save(whisper);
+
+            String actionInfo = "Başlıklı paylaşımınız onaylanmadı.Tekrar deneyiniz.";
+            notificationService.create(whisper.getTitle(),actionInfo,userRepository.findByUsername(whisper.getAuthorName()).get());
             return true;
         }
         catch (Exception e) {
