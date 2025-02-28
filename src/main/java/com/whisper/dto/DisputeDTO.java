@@ -18,7 +18,7 @@ public class DisputeDTO {
     private Long id;
 
     private String description;
-    private User user;
+    private String user;
     private Date createdDate;
 
     private String whisperTitle;
@@ -31,5 +31,7 @@ public class DisputeDTO {
     private Set<String> tags;
 
     private Integer commentSize;
+    private Integer disputeLikeSize;
+    private Integer disputeDisLikeSize;
 
 }

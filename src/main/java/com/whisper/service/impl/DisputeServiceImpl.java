@@ -107,7 +107,7 @@ public class DisputeServiceImpl implements DisputeService {
                 .map(dispute -> new DisputeDTO(
                         dispute.getId(),
                         dispute.getDescription(),
-                        dispute.getUser(),
+                        dispute.getUser().getUsername(),
                         dispute.getCreatedDate(),
                         dispute.getWhisper().getTitle(),
                         dispute.getWhisper().getUrlName(),
@@ -116,7 +116,9 @@ public class DisputeServiceImpl implements DisputeService {
                         dispute.getWhisper().getAuthorName(),
                         dispute.getWhisper().getImageURL(),
                         dispute.getDisputeTag() == null ? empty : dispute.getDisputeTag().getTags(),
-                        dispute.getDisputeComments().size()))
+                        dispute.getDisputeComments().size(),
+                        dispute.getDisputeLike().getNumberLike(),
+                        dispute.getDisputeLike().getNumberDislike()))
                 .collect(Collectors.toList()), page, totalElements);
     }
 
