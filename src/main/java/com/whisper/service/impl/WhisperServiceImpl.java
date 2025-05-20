@@ -13,6 +13,7 @@ import com.whisper.specification.WhisperSpecification;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.*;
@@ -372,17 +373,8 @@ public class WhisperServiceImpl implements WhisperService {
 
     @Override
     public List<WhisperDTO> getCarouselBig() {
-        Calendar endDate = Calendar.getInstance();
-        endDate.add(Calendar.DATE , -7);
-
-        Calendar endDate2 = Calendar.getInstance();
-        endDate.add(Calendar.DATE , -15);
-
-        Calendar endDate3 = Calendar.getInstance();
-        endDate.add(Calendar.DATE , -30);
-
-
-        return whisperRepository.getCarouselBig(endDate.getTime(),endDate2.getTime(),endDate3.getTime());
+        Pageable topTen = PageRequest.of(0, 10);
+        return whisperRepository.getTop10Carousel(topTen);
     }
 
     @Override

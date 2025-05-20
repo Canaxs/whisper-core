@@ -93,12 +93,9 @@ public interface WhisperRepository extends JpaRepository<Whisper, Long> , JpaSpe
             + " w.urlName,"
             + " w.imageURL,"
             + " w.createdDate)"
-            + " FROM Whisper w WHERE (w.createdDate >= :endDate or w.createdDate >= :endDate2 or w.createdDate >= :endDate3 ) "
-            + " AND w.isActive = true "
-            + " ORDER BY w.whisperLike.numberLike LIMIT 10")
-    List<WhisperDTO> getCarouselBig(@Param("endDate") Date endDate,
-                                    @Param("endDate2") Date endDate2,
-                                    @Param("endDate3") Date endDate3 );
+            + " FROM Whisper w WHERE w.isActive = true"
+            + " ORDER BY w.whisperLike.numberLike DESC, w.createdDate DESC ")
+    List<WhisperDTO> getTop10Carousel(Pageable pageable);
 
 
     @Query("SELECT "
