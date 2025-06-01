@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 
@@ -61,5 +63,7 @@ public interface WhisperService {
     Page<Whisper> getWhispersFilter(WhisperFilter whisperFilter , Pageable page);
 
     String uploadImgBB(MultipartFile imageFile);
+
+    byte[] compressImageToWebP(BufferedImage image, long targetSizeKB) throws IOException;
 
 }

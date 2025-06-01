@@ -11,6 +11,7 @@ import com.whisper.service.WhisperService;
 import com.whisper.specification.WhisperFilter;
 import com.whisper.specification.WhisperSpecification;
 import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +25,14 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -437,10 +446,13 @@ public class WhisperServiceImpl implements WhisperService {
     @Override
     public String uploadImgBB(MultipartFile imageFile) {
         String imgBBUrl = imgBBUploadURL + "?key=" + imgBBKey;
+
         try {
             RestTemplate restTemplate = new RestTemplate();
+            BufferedImage originalImage = ImageIO.read(imageFile.getInputStream());
 
-            byte[] fileContent = imageFile.getBytes();
+            byte[] fileContent = compressImageToWebP(originalImage, 600L);
+
             String encodedString = java.util.Base64.getEncoder().encodeToString(fileContent);
 
             MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
@@ -453,20 +465,58 @@ public class WhisperServiceImpl implements WhisperService {
 
             ResponseEntity<String> response = restTemplate.exchange(imgBBUrl, HttpMethod.POST, entity, String.class);
 
-            if(response.getStatusCode() == HttpStatus.OK) {
+            if (response.getStatusCode() == HttpStatus.OK) {
                 ObjectMapper mapper = new ObjectMapper();
                 JsonNode jsonNode = mapper.readTree(response.getBody());
                 return jsonNode.path("data").path("url").asText();
-            }
-            else {
-                throw new RuntimeException();
+            } else {
+                throw new RuntimeException("imgBB upload failed with status: " + response.getStatusCode());
             }
 
-        }
-        catch (Exception e) {
-            throw new RuntimeException();
+        } catch (Exception e) {
+            throw new RuntimeException("Image upload failed", e);
         }
     }
+
+
+    @Override
+    public byte[] compressImageToWebP(BufferedImage image, long targetSizeKB) throws IOException {
+        Iterator<ImageWriter> writers = ImageIO.getImageWritersByMIMEType("image/webp");
+        if (!writers.hasNext()) {
+            throw new IllegalStateException("No WebP writer found");
+        }
+
+        ImageWriter writer = writers.next();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageOutputStream ios = ImageIO.createImageOutputStream(baos);
+        writer.setOutput(ios);
+
+        ImageWriteParam writeParam = writer.getDefaultWriteParam();
+        writeParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+
+        String[] compressionTypes = writeParam.getCompressionTypes();
+        if (compressionTypes != null && compressionTypes.length > 0) {
+            writeParam.setCompressionType(compressionTypes[0]);
+        }
+
+        float quality = 1.0f;
+        while (quality > 0) {
+            baos.reset();
+            writeParam.setCompressionQuality(quality);
+
+            writer.write(null, new IIOImage(image, null, null), writeParam);
+            if (baos.size() / 1024 <= targetSizeKB) {
+                break;
+            }
+            quality -= 0.05f;
+        }
+
+        writer.dispose();
+        ios.close();
+        return baos.toByteArray();
+    }
+
+
 
     private String turkishToEnglish(String title) {
         return title.replace('Ğ','g')
