@@ -10,22 +10,7 @@
 	</parent>
 	<groupId>com</groupId>
 	<artifactId>whisper</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>whisper</name>
-	<description>An application where users can make rumor-based news and earn money in return.</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
+
 	<properties>
 		<java.version>17</java.version>
 		<jwt.version>0.11.5</jwt.version>
@@ -97,6 +82,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>whisper</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
