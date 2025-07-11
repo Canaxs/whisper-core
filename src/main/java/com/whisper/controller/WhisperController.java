@@ -108,8 +108,8 @@ public class WhisperController {
     }
 
     @GetMapping("/getBestUserPoint")
-    public ResponseEntity<List<WhisperDTO>> getBestUserPoint() {
-        return ResponseEntity.ok(whisperService.getBestUserPoint());
+    public ResponseEntity<Page<WhisperDTO>> getBestUserPoint(Pageable page) {
+        return ResponseEntity.ok(whisperService.getBestUserPoint(page));
     }
 
     @GetMapping("/getUserWhispers/{username}")

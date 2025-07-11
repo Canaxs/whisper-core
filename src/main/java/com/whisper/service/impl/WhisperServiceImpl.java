@@ -371,8 +371,8 @@ public class WhisperServiceImpl implements WhisperService {
     }
 
     @Override
-    public List<WhisperDTO> getBestUserPoint() {
-        return whisperRepository.getBestUserPoint();
+    public Page<WhisperDTO> getBestUserPoint(Pageable page) {
+        return whisperRepository.getBestUserPoint(page);
     }
 
     @Override

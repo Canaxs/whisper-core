@@ -45,7 +45,7 @@ public interface WhisperService {
 
     List<WhisperPanelDTO> getPendingWhispers();
 
-    List<WhisperDTO> getBestUserPoint();
+    Page<WhisperDTO> getBestUserPoint(Pageable page);
 
     List<WhisperDTO> getUserWhispers(String username);
     List<WhisperDTO> getCarouselBig();

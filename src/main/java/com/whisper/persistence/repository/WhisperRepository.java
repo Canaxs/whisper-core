@@ -67,8 +67,8 @@ public interface WhisperRepository extends JpaRepository<Whisper, Long> , JpaSpe
             + " w.urlName,"
             + " w.imageURL,"
             + " w.createdDate)"
-            + " FROM Whisper w WHERE w.isActive = true ORDER BY w.whisperLike.numberLike DESC LIMIT 24")
-    List<WhisperDTO> getBestUserPoint();
+            + " FROM Whisper w WHERE w.isActive = true ORDER BY w.whisperLike.numberLike DESC")
+    Page<WhisperDTO> getBestUserPoint(Pageable pageable);
 
     @Query("SELECT "
             + " new com.whisper.dto.WhisperDTO("
